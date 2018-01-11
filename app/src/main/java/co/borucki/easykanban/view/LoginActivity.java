@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -38,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.login_fourth_digit)
     EditText mFourthDigit;
 
+    @BindView(R.id.login_tool_bar)
+    Toolbar navigationToolBar;
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -67,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
+        navigationToolBar.setTitle("Login");
         List<String> spinnerArray = new ArrayList<>();
         spinnerArray.add("Jan Kowalski");
         spinnerArray.add("Jan Nowak");
@@ -75,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, R.layout.login_spinner_style, spinnerArray) {
-            public @NonNull View   getView(int position, View convertView, @NonNull ViewGroup parent) {
+            public @NonNull
+            View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
                 View v = super.getView(position, convertView, parent);
 

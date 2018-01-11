@@ -1,4 +1,4 @@
-package co.borucki.easykanban;
+package co.borucki.easykanban.statics;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -56,7 +56,7 @@ public class LocaleHelper {
         return getPersistedData(context, Locale.getDefault().getLanguage());
     }
 
-    public static Context setLocale(Context context, String language) {
+    private static Context setLocale(Context context, String language) {
         persist(context, language);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
