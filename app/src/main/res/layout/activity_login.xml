@@ -11,4 +11,86 @@
     tools:context="co.borucki.easykanban.view.LoginActivity">
 
 
+    <Spinner
+        android:id="@+id/login_activity_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarSize="15dp"
+
+        />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="10dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/login_first_digit"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_border"
+
+            android:cursorVisible="true"
+
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:labelFor="@+id/login_first_digit"
+            android:maxLength="1"
+            android:textSize="23sp" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/login_second_digit"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_border"
+            android:cursorVisible="true"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:labelFor="@+id/login_second_digit"
+            android:maxLength="1"
+            android:textSize="23sp"
+
+            />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/login_third_digit"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_border"
+            android:cursorVisible="true"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:labelFor="@+id/login_third_digit"
+            android:maxLength="1"
+            android:textSize="23sp" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/login_fourth_digit"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_border"
+            android:cursorVisible="true"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:labelFor="@+id/login_fourth_digit"
+            android:maxLength="1"
+            android:textSize="23sp" />
+
+    </LinearLayout>
 </LinearLayout>
