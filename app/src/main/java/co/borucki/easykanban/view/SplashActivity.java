@@ -1,10 +1,10 @@
 package co.borucki.easykanban.view;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -12,11 +12,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,12 +24,15 @@ import co.borucki.easykanban.R;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.statics.Device;
+import co.borucki.easykanban.statics.LocaleHelper;
 
 public class SplashActivity extends AppCompatActivity {
     private CustomDataRepository mRepository = CustomDataRepositoryImpl.getInstance();
     private static final int PERMISSIONS_REQUEST_READ_PHONE_STATUS = 1;
     private boolean handlerFlag = false;
 
+    @BindView(R.id.splash_activity_layout)
+    RelativeLayout mLayout;
     @BindView(R.id.splash_activity_logo)
     ImageView mLogo;
     @BindView(R.id.splash_activity_skip_counter)
@@ -39,6 +41,8 @@ public class SplashActivity extends AppCompatActivity {
     TextView mCustomizedText;
     @BindView(R.id.splash_activity_thanks_text)
     TextView mThanksText;
+    @BindView(R.id.splash_activity_author)
+    TextView mAuthor;
 
     @Override
     protected void onPause() {
@@ -57,6 +61,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        loadCustomDesign();
         mSkipCounter.setVisibility(View.INVISIBLE);
         if (mRepository.getIMEI().equals("")) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
@@ -65,27 +70,53 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 askPermission();
             }
-
-
         } else {
             runMainScrees();
         }
+    }
 
+    private void loadCustomDesign() {
+        mCustomizedText.setText(mRepository.getSplashScreenCustomText());
+        mCustomizedText.setTextSize(mRepository.getSplashScreenCustomTextSize());
+        mCustomizedText.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
+        if ((mRepository.getSplashScreenTextVisible() & 1) == 1) {
+            mCustomizedText.setVisibility(View.VISIBLE);
+        } else {
+            mCustomizedText.setVisibility(View.GONE);
+        }
+        mThanksText.setText(mRepository.getSplashScreenThanksText());
+        mThanksText.setTextSize(mRepository.getSplashScreenThanksTextSize());
+        mThanksText.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
+        if ((mRepository.getSplashScreenTextVisible() & 2) == 2) {
+            mThanksText.setVisibility(View.VISIBLE);
+        } else {
+            mThanksText.setVisibility(View.GONE);
+        }
+        if ((mRepository.getSplashScreenTextVisible() & 4) == 4) {
+            mSkipCounter.setVisibility(View.VISIBLE);
+        } else {
+            mSkipCounter.setVisibility(View.GONE);
+        }
+        if (!mRepository.getLogo().equals("")) {
+            mLogo.setImageBitmap(LocaleHelper.decodeImageFromStringToBitmap(mRepository.getLogo()));
+        }
+        mSkipCounter.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
+        mAuthor.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
+        mLayout.setBackgroundColor(Color.parseColor(mRepository.getSplashLayoutColor()));
     }
 
     private void runMainScrees() {
-
-        new CountDownTimer(15000, 1000) {
+        new CountDownTimer(mRepository.getSplashScreenTime() * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                mSkipCounter.setVisibility(View.VISIBLE);
+                if ((mRepository.getSplashScreenTextVisible() & 4) == 4) {
+                    mSkipCounter.setVisibility(View.VISIBLE);
+                }
                 mSkipCounter.setText(getString(R.string.splash_activity_counter_text, millisUntilFinished / 1000));
-
             }
 
             public void onFinish() {
                 if (!handlerFlag) {
-
                     navigateToLoginScreen();
                 }
             }
@@ -108,8 +139,6 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             saveImeiInSharedPreference();
         }
-
-
     }
 
     @Override
@@ -118,11 +147,8 @@ public class SplashActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_READ_PHONE_STATUS:
                 if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
-                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     saveImeiInSharedPreference();
                     runMainScrees();
-
-
                 } else {
                     showAlertDialogReadStatusPhonePermissionDenied();
                 }
@@ -132,15 +158,15 @@ public class SplashActivity extends AppCompatActivity {
     private void showAlertDialogReadStatusPhonePermissionDenied() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setCancelable(false);
-        dialog.setTitle("Warning");
-        dialog.setMessage("Easy Kanban app need read phone status to identification devices in supplier system. If you deny permission, application will be closed.");
-        dialog.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+        dialog.setTitle(R.string.splash_activity_permission_warning);
+        dialog.setMessage(R.string.splash_activity_permission_alert_message);
+        dialog.setPositiveButton(R.string.splash_activity_permission_alert_positive_action, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 askPermission();
             }
         });
-        dialog.setNegativeButton("Close app", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(R.string.splash_activity_permission_alert_negative_action, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 System.exit(0);
