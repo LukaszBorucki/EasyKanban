@@ -19,6 +19,12 @@ public class EasyKanbanSharedPreference {
     private static final String THANKS_SPLASH_TEXT_SIZE = "size of thanks text on splash screen";
     private static final String SPLASH_LAYOUT_COLOR = "Splash layout background color";
     private static final String SPLASH_LAYOUT_TEXT_COLOR = "Splash layout text color";
+    private static final String LOGIN_ACTIVITY_TEXT_COLOR = "Login activity text color";
+    private static final String LOGIN_ACTIVITY_BACKGROUND_COLOR = "Login activity background color";
+    private static final String LOGIN_ACTIVITY_STATUS_BAR_COLOR = "Login activity status bar color";
+    private static final String LOGIN_ACTIVITY_TOOL_BAR_TEXT_COLOR = "Login activity tool bar text color";
+    private static final String LOGIN_ACTIVITY_TOOL_BAR_COLOR = "Login activity tool bar color";
+    private static final String LOGIN_ACTIVITY_TOOL_BAR_ICON = "Login activity tool bar icon";
     private final SharedPreferences mSharedPreferences;
     private Context context;
 
@@ -106,6 +112,54 @@ public class EasyKanbanSharedPreference {
 
     public String getSplashTextColor() {
         return mSharedPreferences.getString(SPLASH_LAYOUT_TEXT_COLOR, "#000000");
+    }
+
+    public void setLoginLayoutColor(String color) {
+        setSharedPreferencesString(LOGIN_ACTIVITY_BACKGROUND_COLOR, color, "String");
+    }
+
+    public String getLoginLayoutColor() {
+        return mSharedPreferences.getString(LOGIN_ACTIVITY_BACKGROUND_COLOR, "#FFFFFF");
+    }
+
+    public void setLoginTextColor(String textColor) {
+        setSharedPreferencesString(LOGIN_ACTIVITY_TEXT_COLOR, textColor, "String");
+    }
+
+    public String getLoginTextColor() {
+        return mSharedPreferences.getString(LOGIN_ACTIVITY_TEXT_COLOR, "#000000");
+    }
+
+    public void setLoginToolBarColor(String color) {
+        setSharedPreferencesString(LOGIN_ACTIVITY_TOOL_BAR_COLOR, color, "String");
+    }
+
+    public String getLoginToolBarColor() {
+        return mSharedPreferences.getString(LOGIN_ACTIVITY_TOOL_BAR_COLOR, "#3F51B5");
+    }
+
+    public void setLoginToolBarTextColor(String color) {
+        setSharedPreferencesString(LOGIN_ACTIVITY_TOOL_BAR_TEXT_COLOR, color, "String");
+    }
+
+    public String getLoginToolBarTextColor() {
+        return mSharedPreferences.getString(LOGIN_ACTIVITY_TOOL_BAR_TEXT_COLOR, "#FFFFFF");
+    }
+
+    public void setLoginStatusBarColor(String color) {
+        setSharedPreferencesString(LOGIN_ACTIVITY_STATUS_BAR_COLOR, color, "String");
+    }
+
+    public String getLoginStatusBarColor() {
+        return mSharedPreferences.getString(LOGIN_ACTIVITY_STATUS_BAR_COLOR, "#303F9F");
+    }
+
+    public void setLoginToolBarIcon(String icon) {
+        setSharedPreferencesString(LOGIN_ACTIVITY_TOOL_BAR_ICON, icon, "String");
+    }
+
+    public String getLoginToolBarIcon() {
+        return mSharedPreferences.getString(LOGIN_ACTIVITY_TOOL_BAR_ICON, "");
     }
 
     private void setSharedPreferencesString(String key, @NonNull Object value, String type) {

@@ -117,4 +117,64 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
     public String getSplashTextColor() {
         return mSharedPref.getSplashTextColor();
     }
+
+    @Override
+    public void setLoginLayoutColor(String color) {
+        mSharedPref.setLoginLayoutColor(color);
+    }
+
+    @Override
+    public String getLoginLayoutColor() {
+        return mSharedPref.getLoginLayoutColor();
+    }
+
+    @Override
+    public void setLoginTextColor(String textColor) {
+        mSharedPref.setLoginTextColor(textColor);
+    }
+
+    @Override
+    public String getLoginTextColor() {
+        return mSharedPref.getLoginTextColor();
+    }
+
+    @Override
+    public void setLoginToolBarColor(String color) {
+        mSharedPref.setLoginToolBarColor(color);
+    }
+
+    @Override
+    public String getLoginToolBarColor() {
+        return mSharedPref.getLoginToolBarColor();
+    }
+
+    @Override
+    public void setLoginToolBarTextColor(String color) {
+        mSharedPref.setLoginToolBarTextColor(color);
+    }
+
+    @Override
+    public String getLoginToolBarTextColor() {
+        return mSharedPref.getLoginToolBarTextColor();
+    }
+
+    @Override
+    public void setLoginStatusBarColor(String color) {
+        mSharedPref.setLoginStatusBarColor(color);
+    }
+
+    @Override
+    public String getLoginStatusBarColor() {
+        return mSharedPref.getLoginStatusBarColor();
+    }
+
+    @Override
+    public void setLoginToolBarIcon(String icon) {
+        mSharedPref.setLoginToolBarIcon(icon);
+    }
+
+    @Override
+    public String getLoginToolBarIcon() {
+        return mSharedPref.getLoginToolBarIcon();
+    }
 }
