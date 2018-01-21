@@ -1,6 +1,8 @@
 package co.borucki.easykanban.repository;
 
 
+import android.content.pm.InstrumentationInfo;
+
 public interface CustomDataRepository {
     String getLogo();
 
@@ -14,4 +16,55 @@ public interface CustomDataRepository {
 
     void setSplashScreenTime(long seconds);
 
+    void setSplashScreenTextVisible(int number);
+
+    int getSplashScreenTextVisible();
+
+    void setSplashScreenCustomText(String text);
+
+    String getSplashScreenCustomText();
+
+    void setSplashScreenThanksText(String text);
+
+    String getSplashScreenThanksText();
+
+    void setSplashScreenCustomTextSize(float textSize);
+
+    float getSplashScreenCustomTextSize();
+
+    void setSplashScreenThanksTextSize(float textSize);
+
+    float getSplashScreenThanksTextSize();
+
+    void setSplashLayoutColor(String color);
+
+    String getSplashLayoutColor();
+
+    void setSplashTextColor(String textColor);
+
+    String getSplashTextColor();
+
+    void setLoginLayoutColor(String color);
+
+    String getLoginLayoutColor();
+
+    void setLoginTextColor(String textColor);
+
+    String getLoginTextColor();
+
+    void setLoginToolBarColor(String color);
+
+    String getLoginToolBarColor();
+
+    void setLoginToolBarTextColor(String color);
+
+    String getLoginToolBarTextColor();
+
+    void setLoginStatusBarColor(String color);
+
+    String getLoginStatusBarColor();
+
+    void setLoginToolBarIcon(String icon);
+
+    String getLoginToolBarIcon();
 }

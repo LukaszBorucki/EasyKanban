@@ -3,20 +3,22 @@ package co.borucki.easykanban;
 import android.app.Application;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import co.borucki.easykanban.database.Database;
+import co.borucki.easykanban.database.DatabaseOrmImpl;
 import co.borucki.easykanban.persistence.EasyKanbanSharedPreference;
 
 public class AndroidApplication extends Application {
 
-    //    private Database mDatabase;
     private static EasyKanbanSharedPreference mSharedPreferences;
-//    private static Database mDatabase;
+    private static Database mDatabase;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mSharedPreferences = new EasyKanbanSharedPreference(this);
-//        mDatabase = new DatabaseCache();
-//        mDatabase = OpenHelperManager.getHelper(this, DatabaseOrmImpl.class);
+        mDatabase = OpenHelperManager.getHelper(this, DatabaseOrmImpl.class);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
@@ -24,8 +26,7 @@ public class AndroidApplication extends Application {
         return mSharedPreferences;
     }
 
-//    public static Database getDatabase() {
-//        return mDatabase;
-//
-//    }
+    public static Database getDatabase() {
+        return mDatabase;
+    }
 }
