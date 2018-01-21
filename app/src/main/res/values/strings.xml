@@ -26,4 +26,8 @@
     <string name="main_activity_button_2">scan delivered product</string>
     <string name="main_activity_button_3">incoming message</string>
     <string name="main_activity_button_4">stocktaking</string>
+    <string name="button_text">text</string>
+    <string name="incoming_message_subject">Subject</string>
+    <string name="single_message_from">From:</string>
+    <string name="single_message_delete_button_text">Delete a message</string>
 </resources>

@@ -3,7 +3,6 @@ package co.borucki.easykanban.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,14 +38,18 @@ import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
+import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DataTimeCounter;
-import co.borucki.easykanban.statics.LocaleHelper;
+import co.borucki.easykanban.statics.SampleData;
 
 public class LoginActivity extends AppCompatActivity {
     private CustomDataRepository mCustomRep = CustomDataRepositoryImpl.getInstance();
     private final UserRepository mUserRep = UserRepositoryImpl.getInstance();
     private List<User> mUsers;
     private User user;
+    private List<String> spinnerArray = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
+
     @BindView(R.id.login_layout_logo)
     ImageView mLogo;
     @BindView(R.id.login_activity)
@@ -97,18 +99,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        mAuthor.setTextColor(Color.parseColor(mCustomRep.getLoginTextColor()));
-        if (!mCustomRep.getLogo().equals("")) {
-           mLogo.setImageBitmap(LocaleHelper.decodeImageFromStringToBitmap(mCustomRep.getLogo()));
-        }
-        mLayout.setBackgroundColor(Color.parseColor(mCustomRep.getLoginLayoutColor()));
-        getWindow().setStatusBarColor(Color.parseColor(mCustomRep.getLoginStatusBarColor()));
-        navigationToolBar.setBackgroundColor(Color.parseColor(mCustomRep.getLoginToolBarColor()));
-        navigationToolBar.setTitleTextColor(Color.parseColor(mCustomRep.getLoginToolBarTextColor()));
-        if (mCustomRep.getLoginToolBarIcon().equals("")) {
-            navigationToolBar.setOverflowIcon(getResources().getDrawable(R.drawable.tool_bar_white_24dp));
-        }
-        navigationToolBar.setTitle(R.string.login_activity_tool_bar_title);
+
+        CustomLayoutViewSetup.SetLoginLayout(this, mAuthor, mLogo, mLayout, navigationToolBar);
         setSupportActionBar(navigationToolBar);
         mUsers = mUserRep.getAllUsers();
         if (mUsers.size() == 0) {
@@ -116,12 +108,9 @@ public class LoginActivity extends AppCompatActivity {
             hideKeyboard();
             showErrorDialog(getString(R.string.login_activity_no_users_loaded), false, false);
         }
-        List<String> spinnerArray = new ArrayList<>();
-        for (User mUser : mUsers) {
-            spinnerArray.add(mUser.getName() + " " + mUser.getSurname());
-        }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        setSpinnerArray();
+        adapter = new ArrayAdapter<String>(
                 this, R.layout.login_spinner_style, spinnerArray) {
             public @NonNull
             View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -240,6 +229,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void setSpinnerArray() {
+        for (User mUser : mUsers) {
+            spinnerArray.add(mUser.getName() + " " + mUser.getSurname());
+        }
+    }
+
     private void disableEditTexts() {
         mFirstDigit.setEnabled(false);
         mSecondDigit.setEnabled(false);
@@ -270,7 +265,9 @@ public class LoginActivity extends AppCompatActivity {
         password += Integer.valueOf(mFourthDigit.getText().toString());
 
         if (password != Integer.valueOf(user.getPassword())) {
-            if(DataTimeCounter.getPeriodInSeconds(user.getLastLogin())>900){user.setPossibleLoginTry(10);}
+            if (DataTimeCounter.getPeriodInSeconds(user.getLastLogin()) > 900) {
+                user.setPossibleLoginTry(10);
+            }
             user.setPossibleLoginTry(user.getPossibleLoginTry() - 1);
             user.setLastLogin(DataTimeCounter.getDateTime());
             mUserRep.saveUser(user);
@@ -292,6 +289,7 @@ public class LoginActivity extends AppCompatActivity {
             user.setLastLogin(DataTimeCounter.getDateTime());
             mUserRep.saveUser(user);
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("USER_ID", user.getId());
             startActivity(intent);
         }
     }
@@ -343,10 +341,12 @@ public class LoginActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         } else if (item.getItemId() == R.id.load_data) {
-            // Intent intent = new Intent(this, ContactActivity.class);
-            //startActivity(intent);
-
-            Log.d("TAG", "contacts");
+            SampleData.loadUsers();
+            mUsers.clear();
+            mUsers = mUserRep.getAllUsers();
+            spinnerArray.clear();
+            setSpinnerArray();
+            adapter.notifyDataSetChanged();
         }
 
 
@@ -358,5 +358,4 @@ public class LoginActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.info_menu, menu);
         return true;
     }
-
 }

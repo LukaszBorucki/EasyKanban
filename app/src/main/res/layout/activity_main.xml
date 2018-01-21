@@ -4,154 +4,236 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="co.borucki.easykanban.view.MainActivity">
-<ImageView
-    android:contentDescription="@string/custom_logo"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/splash_logo"
-    android:layout_centerVertical="true"
-    android:layout_centerHorizontal="true"
-    />
+
+    <ImageView
+        android:id="@+id/main_activity_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/custom_logo"
+        android:src="@drawable/splash_logo" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="16dp">
+            android:layout_weight="1">
 
-            <Button
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/usedProductButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/main_activity_button_1"
-                android:translationZ="0dp" />
-
-            <TextView
-                android:id="@+id/usedProductButtonBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/usedProductButton"
-                android:layout_alignBottom="@+id/usedProductButton"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/badge_circle"
-                android:gravity="center"
-                android:hint="1"
-                android:padding="23dp"
-                android:textColor="#FFF"
-                android:textSize="20sp"
-                android:translationZ="100dp" />
+                android:layout_marginBottom="16dp"
 
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:padding="16dp">
+
+
+                <TextView
+                    android:id="@+id/usedProductButtonText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="@string/button_text"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:translationZ="0dp" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/usedProductButtonBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center"
+                    android:minWidth="30dp"
+                    android:paddingBottom="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="2dp"
+                    android:textSize="20sp"
+                    android:translationZ="100dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="16dp">
+            android:layout_weight="1">
 
-            <Button
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/receivedProductButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/main_activity_button_2"
-                android:translationZ="0dp" />
-
-            <TextView
-                android:id="@+id/receivedProductButtonBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:padding="16dp">
 
-                android:layout_alignBaseline="@+id/receivedProductButton"
-                android:layout_alignBottom="@+id/receivedProductButton"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/badge_circle"
-                android:gravity="center"
 
-                android:hint="2"
-                android:padding="23dp"
-                android:textColor="#FFF"
-                android:textSize="20sp"
-                android:translationZ="100dp" />
+                <TextView
+                    android:id="@+id/receivedProductButtonText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="@string/button_text"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:translationZ="0dp" />
 
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/receivedProductButtonBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center"
+                    android:minWidth="30dp"
+                    android:padding="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="2dp"
+                    android:textSize="20sp"
+                    android:translationZ="100dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="16dp">
+            android:layout_weight="1">
 
-            <Button
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/messageButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/main_activity_button_3"
-                android:translationZ="0dp" />
-
-            <TextView
-                android:id="@+id/messageButtonBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:padding="16dp">
 
-                android:layout_alignBaseline="@+id/messageButton"
-                android:layout_alignBottom="@+id/messageButton"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/badge_circle"
-                android:gravity="center"
 
-                android:hint="3"
-                android:padding="23dp"
-                android:textColor="#FFF"
-                android:textSize="20sp"
-                android:translationZ="100dp" />
+                <TextView
+                    android:id="@+id/messageButtonText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="@string/button_text"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:translationZ="0dp" />
 
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/messageButtonBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center"
+                    android:minWidth="30dp"
+                    android:padding="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="2dp"
+                    android:textSize="20sp"
+                    android:translationZ="100dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1">
 
-            android:padding="16dp">
-
-            <Button
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/stocktakingProductButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/main_activity_button_4"
-                android:translationZ="0dp" />
-
-            <TextView
-                android:id="@+id/stocktakingProductButtonBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:padding="16dp">
 
-                android:layout_alignBaseline="@+id/stocktakingProductButton"
-                android:layout_alignBottom="@+id/stocktakingProductButton"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/badge_circle"
-                android:gravity="center"
-                android:hint="4"
-                android:padding="23dp"
-                android:textColor="#FFF"
-                android:textSize="20sp"
-                android:translationZ="100dp" />
 
+                <TextView
+                    android:id="@+id/stocktakingProductButtonText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="@string/button_text"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:translationZ="0dp" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/stocktakingProductButtonBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center"
+                    android:minWidth="30dp"
+                    android:padding="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="2dp"
+                    android:textSize="20sp"
+                    android:translationZ="100dp" />
+            </RelativeLayout>
         </RelativeLayout>
+
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/login_activity_author"
+        android:id="@+id/main_activity_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
