@@ -11,12 +11,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.IncomingMessage;
+import co.borucki.easykanban.repository.EventLogRepository;
+import co.borucki.easykanban.repository.EventLogRepositoryImpl;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
+import co.borucki.easykanban.statics.DataTimeCounter;
 
 public class SingleMessageView extends AppCompatActivity {
     private final IncomingMessageRepository mMessageRepo = IncomingMessageRepositoryImpl.getInstance();
+    private final EventLogRepository mLogRepo = EventLogRepositoryImpl.getInstance();
     private long userId;
     private long messageId;
     private IncomingMessage message;
@@ -40,15 +45,15 @@ public class SingleMessageView extends AppCompatActivity {
         setContentView(R.layout.activity_single_message_view);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        userId = intent.getLongExtra("USER_ID", 0);
-        messageId = intent.getLongExtra("MESSAGE_ID", 0);
+        userId = intent.getLongExtra("USER_ID", -1);
+        messageId = intent.getLongExtra("MESSAGE_ID", -1);
         message = mMessageRepo.getMessageById(messageId);
         mFrom.setText(message.getFrom());
         mSubject.setText(message.getSubject());
         mText.setText(message.getContents());
         mText.setTextSize(20);
         mText.setMovementMethod(new ScrollingMovementMethod());
-        changedReadMessageStatus=message.isRead();
+        changedReadMessageStatus = message.isRead();
         handler = new Handler();
         handler.postDelayed(runnable, 3000);
 
@@ -58,7 +63,12 @@ public class SingleMessageView extends AppCompatActivity {
                 if (!changedReadMessageStatus) {
                     message.setRead(true);
                     message.setWhoReadFirstMessage(userId);
-
+                    mLogRepo.saveEventLog(
+                            new EventLog(0
+                                    , DataTimeCounter.getDateTime()
+                                    , userId
+                                    , "Read message id= \"" + message.getId() + "\""
+                                    , "MESSAGE"));
                     mMessageRepo.saveMessage(message);
                     changedReadMessageStatus = true;
                 }
@@ -98,9 +108,21 @@ public class SingleMessageView extends AppCompatActivity {
         if (!message.isRead()) {
             message.setRead(true);
             message.setWhoReadFirstMessage(userId);
+            mLogRepo.saveEventLog(
+                    new EventLog(0
+                            , DataTimeCounter.getDateTime()
+                            , userId
+                            , "Read message id= \"" + message.getId() + "\""
+                            , "MESSAGE"));
         }
         message.setWhoHideMessage(userId);
         mMessageRepo.saveMessage(message);
+        mLogRepo.saveEventLog(
+                new EventLog(0
+                        , DataTimeCounter.getDateTime()
+                        , userId
+                        , "Delete message id= \"" + message.getId() + "\""
+                        , "MESSAGE"));
         finish();
     }
 }

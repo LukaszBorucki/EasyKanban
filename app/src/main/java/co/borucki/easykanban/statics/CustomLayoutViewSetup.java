@@ -56,6 +56,13 @@ public class CustomLayoutViewSetup {
         }
         navigationToolBar.setTitle(R.string.login_activity_tool_bar_title);
     }
+    public static void SetScannedLayout(Toolbar navigationToolBar){
+        navigationToolBar.setBackgroundColor(Color.parseColor(mCustomRepo.getLoginToolBarColor()));
+        navigationToolBar.setTitleTextColor(Color.parseColor(mCustomRepo.getLoginToolBarTextColor()));
+
+
+
+    }
 
     public static void SetMessageBadge(TextView mMessageButtonBadge) {
         if (mMessageRepo.countUnreadMessages() > 0) {

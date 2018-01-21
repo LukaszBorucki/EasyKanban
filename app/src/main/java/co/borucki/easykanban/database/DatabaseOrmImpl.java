@@ -15,6 +15,7 @@ import java.util.List;
 
 import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.IncomingMessage;
+import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.User;
 
 public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database {
@@ -24,12 +25,15 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     private RuntimeExceptionDao<User, Integer> mUserDao;
     private RuntimeExceptionDao<IncomingMessage, Integer> mMessageDao;
     private RuntimeExceptionDao<EventLog, Integer> mEventLogDao;
+    private RuntimeExceptionDao<ScannedProduct, Integer> mScannedProductDao;
 
     public DatabaseOrmImpl(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mUserDao = getRuntimeExceptionDao(User.class);
         mMessageDao = getRuntimeExceptionDao(IncomingMessage.class);
         mEventLogDao = getRuntimeExceptionDao(EventLog.class);
+        mScannedProductDao = getRuntimeExceptionDao(ScannedProduct.class);
+
     }
 
     @Override
@@ -38,6 +42,8 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             TableUtils.createTableIfNotExists(connectionSource, IncomingMessage.class);
             TableUtils.createTableIfNotExists(connectionSource, EventLog.class);
+            TableUtils.createTableIfNotExists(connectionSource, ScannedProduct.class);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -127,4 +133,22 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     }
 
     //<EventLog/>
+    //<ScannedProduct>
+
+    @Override
+    public List<ScannedProduct> getAllScannedProductByType(String type) {
+        return mScannedProductDao.queryForEq("scanned_type", type);
+    }
+
+    @Override
+    public long countScannedProductByType(String type) {
+        long counter = 0;
+        try {
+            counter = mScannedProductDao.queryBuilder().where().eq("scanned_type", type).countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return counter;
+    }
+//<ScannedProduct/>
 }

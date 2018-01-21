@@ -11,6 +11,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.model.ScannedType;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         CustomLayoutViewSetup.SetMessageBadge(mMessageButtonBadge);
 
 
-
     }
 
     @Override
@@ -77,17 +77,19 @@ public class MainActivity extends AppCompatActivity {
         mUsedProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(v.getContext(), UsedProduct.class);
-//                intent.putExtra("USER_ID", userId);
-//                v.getContext().startActivity(intent);
+                Intent intent = new Intent(v.getContext(), ScannedProductActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("LIST_TYPE", ScannedType.USED.getType().toUpperCase());
+                v.getContext().startActivity(intent);
             }
         });
         mReceivedProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(v.getContext(), ReceivedProduct.class);
-//                intent.putExtra("USER_ID", userId);
-//                v.getContext().startActivity(intent);
+                Intent intent = new Intent(v.getContext(), ScannedProductActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("LIST_TYPE", ScannedType.RECEIVED.getType().toUpperCase());
+                v.getContext().startActivity(intent);
             }
         });
         mMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +103,10 @@ public class MainActivity extends AppCompatActivity {
         mStocktakingProductButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(v.getContext(), Stocktaking.class);
-//                intent.putExtra("USER_ID", userId);
-//                v.getContext().startActivity(intent);
+                Intent intent = new Intent(v.getContext(), ScannedProductActivity.class);
+                intent.putExtra("USER_ID", userId);
+                intent.putExtra("LIST_TYPE", ScannedType.STOCKTAKING.getType().toUpperCase());
+                v.getContext().startActivity(intent);
             }
         });
     }

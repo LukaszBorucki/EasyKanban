@@ -36,7 +36,8 @@
             android:noHistory="true" />
         <activity android:name=".view.MainActivity" />
         <activity android:name=".view.IncomingMessageActivity" />
-        <activity android:name=".view.SingleMessageView"/>
+        <activity android:name=".view.SingleMessageView" />
+        <activity android:name=".view.ScannedProductActivity"></activity>
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.IncomingMessage;
+import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.User;
 
 public interface Database {
@@ -27,4 +28,8 @@ public interface Database {
 
 
     void saveEventLog(EventLog eventLog);
+
+    List<ScannedProduct> getAllScannedProductByType(String type);
+
+    long countScannedProductByType(String type);
 }

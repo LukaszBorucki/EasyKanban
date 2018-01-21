@@ -30,4 +30,10 @@
     <string name="incoming_message_subject">Subject</string>
     <string name="single_message_from">From:</string>
     <string name="single_message_delete_button_text">Delete a message</string>
+    <string name="scanned_product_send_used_list">Send used product list</string>
+    <string name="scanned_product_send_delivered_list">Send delivered product list</string>
+    <string name="scanned_product_send_stocktaking_list">Send stocktaking list</string>
+    <string name="scanned_product_tool_bar_title_stocktaking">Stocktaking</string>
+    <string name="scanned_product_tool_bar_title_delivered_product">Received product</string>
+    <string name="scanned_product_tool_bar_title_used_product">Used product</string>
 </resources>
