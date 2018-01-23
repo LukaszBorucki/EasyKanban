@@ -27,4 +27,14 @@ public class ScannedProductRepositoryImpl implements ScannedProductRepository {
     public long countScannedProductByType(String type) {
         return mDatabase.countScannedProductByType(type);
     }
+
+    @Override
+    public void save(ScannedProduct scannedProduct) {
+        mDatabase.save(scannedProduct);
+    }
+
+    @Override
+    public void delete(ScannedProduct scannedProduct) {
+        mDatabase.delete(scannedProduct);
+    }
 }

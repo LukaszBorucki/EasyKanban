@@ -32,4 +32,8 @@ public interface Database {
     List<ScannedProduct> getAllScannedProductByType(String type);
 
     long countScannedProductByType(String type);
+
+    void save(ScannedProduct scannedProduct);
+
+    void delete(ScannedProduct scannedProduct);
 }

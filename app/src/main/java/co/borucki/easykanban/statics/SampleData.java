@@ -1,9 +1,12 @@
 package co.borucki.easykanban.statics;
 
 import co.borucki.easykanban.model.IncomingMessage;
+import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.User;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
+import co.borucki.easykanban.repository.ScannedProductRepository;
+import co.borucki.easykanban.repository.ScannedProductRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
 
@@ -35,4 +38,16 @@ public class SampleData {
         mMessageRepo.saveMessage(new IncomingMessage(20,"test","Dostawca","2017-05-12 14:20:12",false,"W dniu dzisiejszym została nadana paczka z towarem"));
 
     }
+
+    public static void AddStockTaking(){
+        ScannedProductRepository mRepo = ScannedProductRepositoryImpl.getInstance();
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:21","STOCKTAKING"));
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:58","STOCKTAKING"));
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:58","STOCKTAKING"));
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:58","USED"));
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:58","USED"));
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:58","RECEIVED"));
+        mRepo.save(new ScannedProduct(0,"010 1212",1,"2018-01-22 13:09:58","RECEIVED"));
+    }
+
 }

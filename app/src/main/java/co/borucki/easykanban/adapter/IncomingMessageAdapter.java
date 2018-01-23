@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.model.IncomingMessage;
-import co.borucki.easykanban.statics.DataTimeCounter;
+import co.borucki.easykanban.statics.DateTimeCounter;
 
 
 public class IncomingMessageAdapter extends RecyclerView.Adapter<IncomingMessageAdapter.IncomingMessageViewHolder> {
@@ -46,7 +45,7 @@ public class IncomingMessageAdapter extends RecyclerView.Adapter<IncomingMessage
         holder.mSubject.setText(message.getSubject());
         holder.mFrom.setText(message.getFrom());
         holder.mMessage.setText(message.getContents());
-        holder.mReceivedDateTime.setText(DataTimeCounter.dateOrTime(message.getReceivedDate()));
+        holder.mReceivedDateTime.setText(DateTimeCounter.dateOrTime(message.getReceivedDate()));
         if (!message.isRead()) {
             GradientDrawable shape = new GradientDrawable();
             float[] i = {20, 20, 20, 20, 20, 20, 0, 0};

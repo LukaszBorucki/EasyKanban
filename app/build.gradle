@@ -25,9 +25,12 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.5.1'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.j256.ormlite:ormlite-android:5.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.google.android.gms:play-services:11.8.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     debugCompile 'im.dino:dbinspector:3.4.1@aar'
+
 }

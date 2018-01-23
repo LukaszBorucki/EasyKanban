@@ -9,4 +9,7 @@ public interface ScannedProductRepository {
 
     long countScannedProductByType(String type);
 
+    void save(ScannedProduct scannedProduct);
+
+    void delete(ScannedProduct scannedProduct);
 }

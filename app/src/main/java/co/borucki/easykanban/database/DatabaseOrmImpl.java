@@ -150,5 +150,15 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
         }
         return counter;
     }
-//<ScannedProduct/>
+
+    @Override
+    public void save(ScannedProduct scannedProduct) {
+        mScannedProductDao.create(scannedProduct);
+    }
+
+    @Override
+    public void delete(ScannedProduct scannedProduct) {
+        mScannedProductDao.delete(scannedProduct);
+    }
+    //<ScannedProduct/>
 }

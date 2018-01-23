@@ -36,4 +36,10 @@
     <string name="scanned_product_tool_bar_title_stocktaking">Stocktaking</string>
     <string name="scanned_product_tool_bar_title_delivered_product">Received product</string>
     <string name="scanned_product_tool_bar_title_used_product">Used product</string>
+    <string name="dialog_delete_scanned_product_title">Attention!</string>
+    <string name="dialog_delete_scanned_product_positive_button_title">Yes</string>
+    <string name="dialog_delete_scanned_product_negative_buttontitle">Cancel</string>
+    <string name="dialog_delete_scanned_product_message">You try delete scanned product No: %s \nThis operation is irreversible. You really want to delete this product?</string>
+    <string name="scanned_product_single_row_trash">trash_image</string>
+    <string name="scanned_product_adapter_date_time">Scanned on: %s</string>
 </resources>

@@ -17,7 +17,7 @@ import co.borucki.easykanban.repository.EventLogRepository;
 import co.borucki.easykanban.repository.EventLogRepositoryImpl;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
-import co.borucki.easykanban.statics.DataTimeCounter;
+import co.borucki.easykanban.statics.DateTimeCounter;
 
 public class SingleMessageView extends AppCompatActivity {
     private final IncomingMessageRepository mMessageRepo = IncomingMessageRepositoryImpl.getInstance();
@@ -65,7 +65,7 @@ public class SingleMessageView extends AppCompatActivity {
                     message.setWhoReadFirstMessage(userId);
                     mLogRepo.saveEventLog(
                             new EventLog(0
-                                    , DataTimeCounter.getDateTime()
+                                    , DateTimeCounter.getDateTime()
                                     , userId
                                     , "Read message id= \"" + message.getId() + "\""
                                     , "MESSAGE"));
@@ -110,7 +110,7 @@ public class SingleMessageView extends AppCompatActivity {
             message.setWhoReadFirstMessage(userId);
             mLogRepo.saveEventLog(
                     new EventLog(0
-                            , DataTimeCounter.getDateTime()
+                            , DateTimeCounter.getDateTime()
                             , userId
                             , "Read message id= \"" + message.getId() + "\""
                             , "MESSAGE"));
@@ -119,7 +119,7 @@ public class SingleMessageView extends AppCompatActivity {
         mMessageRepo.saveMessage(message);
         mLogRepo.saveEventLog(
                 new EventLog(0
-                        , DataTimeCounter.getDateTime()
+                        , DateTimeCounter.getDateTime()
                         , userId
                         , "Delete message id= \"" + message.getId() + "\""
                         , "MESSAGE"));

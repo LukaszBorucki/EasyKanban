@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         userId = intent.getLongExtra("USER_ID", 0);
         CustomLayoutViewSetup.SetMainLayoutView(mLogo, mAuthor);
         CustomLayoutViewSetup.SetMessageBadge(mMessageButtonBadge);
+        CustomLayoutViewSetup.SetScannedBadge(mUsedProductButtonBadge, ScannedType.USED.getType().toUpperCase());
+        CustomLayoutViewSetup.SetScannedBadge(mReceivedProductButtonBadge, ScannedType.RECEIVED.getType().toUpperCase());
+        CustomLayoutViewSetup.SetScannedBadge(mStocktakingProductButtonBadge, ScannedType.STOCKTAKING.getType().toUpperCase());
 
 
     }
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
         setButtonOnClick();
         CustomLayoutViewSetup.SetMainLayoutView(mLogo, mAuthor);
         CustomLayoutViewSetup.SetMessageBadge(mMessageButtonBadge);
+        CustomLayoutViewSetup.SetScannedBadge(mUsedProductButtonBadge, ScannedType.USED.getType().toUpperCase());
+        CustomLayoutViewSetup.SetScannedBadge(mReceivedProductButtonBadge, ScannedType.RECEIVED.getType().toUpperCase());
+        CustomLayoutViewSetup.SetScannedBadge(mStocktakingProductButtonBadge, ScannedType.STOCKTAKING.getType().toUpperCase());
 
     }
 

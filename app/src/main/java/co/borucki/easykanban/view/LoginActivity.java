@@ -39,7 +39,7 @@ import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
-import co.borucki.easykanban.statics.DataTimeCounter;
+import co.borucki.easykanban.statics.DateTimeCounter;
 import co.borucki.easykanban.statics.SampleData;
 
 public class LoginActivity extends AppCompatActivity {
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (user.isBlocked()) {
                         showErrorDialog(getString(R.string.login_activity_error_user_is_blocked, user.getName(), user.getSurname()), true, false);
                     } else {
-                        long periodInSeconds = DataTimeCounter.getPeriodInSeconds(user.getLastLogin());
+                        long periodInSeconds = DateTimeCounter.getPeriodInSeconds(user.getLastLogin());
                         if (periodInSeconds < 900) {
                             showErrorDialog(
                                     getString(
@@ -265,11 +265,11 @@ public class LoginActivity extends AppCompatActivity {
         password += Integer.valueOf(mFourthDigit.getText().toString());
 
         if (password != Integer.valueOf(user.getPassword())) {
-            if (DataTimeCounter.getPeriodInSeconds(user.getLastLogin()) > 900) {
+            if (DateTimeCounter.getPeriodInSeconds(user.getLastLogin()) > 900) {
                 user.setPossibleLoginTry(10);
             }
             user.setPossibleLoginTry(user.getPossibleLoginTry() - 1);
-            user.setLastLogin(DataTimeCounter.getDateTime());
+            user.setLastLogin(DateTimeCounter.getDateTime());
             mUserRep.saveUser(user);
             if (user.getPossibleLoginTry() > 0) {
                 showErrorDialog(
@@ -286,7 +286,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else {
             user.setPossibleLoginTry(10);
-            user.setLastLogin(DataTimeCounter.getDateTime());
+            user.setLastLogin(DateTimeCounter.getDateTime());
             mUserRep.saveUser(user);
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("USER_ID", user.getId());
