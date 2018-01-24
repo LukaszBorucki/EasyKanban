@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.IncomingMessage;
+import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.User;
 
@@ -36,4 +37,8 @@ public interface Database {
     void save(ScannedProduct scannedProduct);
 
     void delete(ScannedProduct scannedProduct);
+
+    Product findProductById(String id);
+
+    void saveProduct(Product product);
 }

@@ -14,9 +14,13 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -26,22 +30,28 @@ import butterknife.OnClick;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.adapter.ScannedProductAdapter;
 import co.borucki.easykanban.model.EventLog;
+import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.ScannedType;
 import co.borucki.easykanban.model.User;
 import co.borucki.easykanban.repository.EventLogRepository;
 import co.borucki.easykanban.repository.EventLogRepositoryImpl;
+import co.borucki.easykanban.repository.ProductRepository;
+import co.borucki.easykanban.repository.ProductRepositoryImpl;
 import co.borucki.easykanban.repository.ScannedProductRepository;
 import co.borucki.easykanban.repository.ScannedProductRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DateTimeCounter;
+import co.borucki.easykanban.statics.ImageBitmap;
+import co.borucki.easykanban.statics.SampleData;
 
 public class ScannedProductActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 101;
     private static final int REQUEST_CODE = 200;
     private UserRepository mUserRepo = UserRepositoryImpl.getInstance();
+    private ProductRepository mProductRepo = ProductRepositoryImpl.getInstance();
     private ScannedProductRepository mScannedProductRepo = ScannedProductRepositoryImpl.getInstance();
     private final EventLogRepository mLogRepo = EventLogRepositoryImpl.getInstance();
 
@@ -84,6 +94,7 @@ public class ScannedProductActivity extends AppCompatActivity {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                SampleData.loadProduct();
                 refreshData();
                 mRefreshLayout.setRefreshing(false);
             }
@@ -157,19 +168,76 @@ public class ScannedProductActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null) {
                 final Barcode barcode = data.getParcelableExtra("barcode");
-                ScannedProduct scannedProduct = new ScannedProduct(0
-                        , barcode.displayValue
-                        , 1
-                        , DateTimeCounter.getDateTime()
-                        , list_type.getType().toUpperCase());
-                mScannedProductRepo.save(scannedProduct);
-                mLogRepo.saveEventLog(
-                        new EventLog(1
-                                , DateTimeCounter.getDateTime()
-                                , mUserId
-                                , "scanned " + scannedProduct.toString()
-                                , "SCANNED QR CODE"));
-                refreshData();
+                Product product = mProductRepo.findProductById(barcode.displayValue);
+                if (product == null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ScannedProductActivity.this);
+                    builder.setTitle(R.string.scanned_product_not_exist_alert_title);
+                    builder.setMessage(getString(R.string.scanned_product_not_exist_alert_message, barcode.displayValue));
+                    builder.setCancelable(true);
+                    builder.show();
+                } else {
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setCancelable(false);
+                    LayoutInflater inflater = this.getLayoutInflater();
+                    final View dialogView = inflater.inflate(R.layout.scanned_product_confirmation,null);
+                    final TextView productDescription = dialogView.findViewById(R.id.scanned_product_confirmation_text);
+                    final TextView dialogTitle = dialogView.findViewById(R.id.scanned_product_confirmation_title);
+                    final TextView position = dialogView.findViewById(R.id.scanned_product_confirmation_position);
+                    final TextView positionRack = dialogView.findViewById(R.id.scanned_product_confirmation_rack);
+                    final TextView positionRackShelf = dialogView.findViewById(R.id.scanned_product_confirmation_rack_shelf);
+                    final TextView positionRackShelfRow = dialogView.findViewById(R.id.scanned_product_confirmation_rack_shelf_row);
+                    final ImageView productLogo = dialogView.findViewById(R.id.scanned_product_confirmation_image);
+                    if (list_type == ScannedType.RECEIVED) {
+                        position.setText(R.string.scanned_product_position);
+                        positionRack.setText(getString(R.string.scanned_product_position_rack, product.getRackNo()));
+                        positionRackShelf.setText(getString(R.string.scanned_product_position_rack_shelf, product.getRackShelfNo()));
+                        positionRackShelfRow.setText(getString(R.string.scanned_product_position_rack_shelf_row, product.getRackShelfRowNo()));
+                    } else {
+                        position.setVisibility(View.GONE);
+                        positionRack.setVisibility(View.GONE);
+                        positionRackShelf.setVisibility(View.GONE);
+                        positionRackShelfRow.setVisibility(View.GONE);
+                    }
+
+                    dialogTitle.setText(R.string.scanned_product_dialog_title);
+
+                    productDescription.setText(product.getProductId() + "\n" + product.getDescription());
+                    productLogo.setImageBitmap(ImageBitmap.decodeImageFromByteArrayToBitmap(product.getPhoto()));
+
+                    builder.setView(dialogView)
+                            .setPositiveButton(R.string.scanned_product_dialog_positive_button, new DialogInterface.OnClickListener() {
+
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    ScannedProduct scannedProduct = new ScannedProduct(0
+                                            , barcode.displayValue
+                                            , 1
+                                            , DateTimeCounter.getDateTime()
+                                            , list_type.getType().toUpperCase());
+                                    mScannedProductRepo.save(scannedProduct);
+                                    mLogRepo.saveEventLog(
+                                            new EventLog(1
+                                                    , DateTimeCounter.getDateTime()
+                                                    , mUserId
+                                                    , "scanned " + scannedProduct.toString()
+                                                    , "SCANNED QR CODE"));
+                                    refreshData();
+
+                                }
+                            });
+                    builder.setNegativeButton(R.string.scanned_product_dialog_negative_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+
+                }
+
+
             }
         }
     }

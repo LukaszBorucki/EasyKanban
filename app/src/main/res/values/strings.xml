@@ -42,4 +42,14 @@
     <string name="dialog_delete_scanned_product_message">You try delete scanned product No: %s \nThis operation is irreversible. You really want to delete this product?</string>
     <string name="scanned_product_single_row_trash">trash_image</string>
     <string name="scanned_product_adapter_date_time">Scanned on: %s</string>
+    <string name="scanned_product_not_exist_alert_title">Attention!</string>
+    <string name="scanned_product_not_exist_alert_message"><![CDATA[Product >> %s << not found in product database. Please refresh product database and try again.]]></string>
+    <string name="scanned_product_position_rack">RackNo: %d</string>
+    <string name="scanned_product_position_rack_shelf">Shelf No.: %d</string>
+    <string name="scanned_product_position_rack_shelf_row">Row No.: %d</string>
+    <string name="scanned_product_position">Product is located on:</string>
+    <string name="scanned_product_dialog_title">Confirm scanned product</string>
+    <string name="scanned_product_dialog_positive_button">Confirm</string>
+    <string name="scanned_product_dialog_negative_button">Cancel</string>
+    <string name="scanned_product_confirmation_image">photo_of_product</string>
 </resources>

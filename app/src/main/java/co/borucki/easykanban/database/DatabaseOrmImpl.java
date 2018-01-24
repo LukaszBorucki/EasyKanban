@@ -15,6 +15,7 @@ import java.util.List;
 
 import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.IncomingMessage;
+import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.User;
 
@@ -26,6 +27,7 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     private RuntimeExceptionDao<IncomingMessage, Integer> mMessageDao;
     private RuntimeExceptionDao<EventLog, Integer> mEventLogDao;
     private RuntimeExceptionDao<ScannedProduct, Integer> mScannedProductDao;
+    private RuntimeExceptionDao<Product, Integer> mProductDao;
 
     public DatabaseOrmImpl(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,6 +35,7 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
         mMessageDao = getRuntimeExceptionDao(IncomingMessage.class);
         mEventLogDao = getRuntimeExceptionDao(EventLog.class);
         mScannedProductDao = getRuntimeExceptionDao(ScannedProduct.class);
+        mProductDao = getRuntimeExceptionDao(Product.class);
 
     }
 
@@ -43,6 +46,7 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
             TableUtils.createTableIfNotExists(connectionSource, IncomingMessage.class);
             TableUtils.createTableIfNotExists(connectionSource, EventLog.class);
             TableUtils.createTableIfNotExists(connectionSource, ScannedProduct.class);
+            TableUtils.createTableIfNotExists(connectionSource, Product.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -161,4 +165,20 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
         mScannedProductDao.delete(scannedProduct);
     }
     //<ScannedProduct/>
+    //<Product>
+
+    @Override
+    public Product findProductById(String id) {
+        if (mProductDao.queryForEq("product_id", id).size() > 0)
+            return mProductDao.queryForEq("product_id", id).get(0);
+        else return null;
+    }
+
+    @Override
+    public void saveProduct(Product product) {
+        mProductDao.createOrUpdate(product);
+    }
+
+    //<Product/>
+
 }

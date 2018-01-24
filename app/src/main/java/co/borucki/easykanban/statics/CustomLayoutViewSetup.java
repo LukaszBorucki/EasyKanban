@@ -52,7 +52,7 @@ public class CustomLayoutViewSetup {
     public static void SetLoginLayout(LoginActivity loginActivity, TextView mAuthor, ImageView mLogo, RelativeLayout mLayout, Toolbar navigationToolBar) {
         mAuthor.setTextColor(Color.parseColor(mCustomRepo.getLoginTextColor()));
         if (!mCustomRepo.getLogo().equals("")) {
-            mLogo.setImageBitmap(LocaleHelper.decodeImageFromStringToBitmap(mCustomRepo.getLogo()));
+            mLogo.setImageBitmap(ImageBitmap.decodeImageFromStringToBitmap(mCustomRepo.getLogo()));
         }
         mLayout.setBackgroundColor(Color.parseColor(mCustomRepo.getLoginLayoutColor()));
         loginActivity.getWindow().setStatusBarColor(Color.parseColor(mCustomRepo.getLoginStatusBarColor()));

@@ -24,6 +24,7 @@ import co.borucki.easykanban.R;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.statics.Device;
+import co.borucki.easykanban.statics.ImageBitmap;
 import co.borucki.easykanban.statics.LocaleHelper;
 
 public class SplashActivity extends AppCompatActivity {
@@ -98,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
             mSkipCounter.setVisibility(View.GONE);
         }
         if (!mRepository.getLogo().equals("")) {
-            mLogo.setImageBitmap(LocaleHelper.decodeImageFromStringToBitmap(mRepository.getLogo()));
+            mLogo.setImageBitmap(ImageBitmap.decodeImageFromStringToBitmap(mRepository.getLogo()));
         }
         mSkipCounter.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
         mAuthor.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
