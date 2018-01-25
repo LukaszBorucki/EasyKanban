@@ -6,7 +6,7 @@
     <string name="application_author">© Łukasz Borucki</string>
     <string name="title_activity_login">Sign in</string>
 
-    <string name="splash_activity_logo_content_description">Logo of your company</string>
+    <string name="splash_activity_logo_content_description">Logo of your customer</string>
     <string name="login_activity_alert_dialog_title">Error</string>
     <string name="login_activity_alert_dialog_message">Password is incorrect.\nPlease try again.\n\nyou have %d attempts left, then your account will be blocked</string>
     <string name="login_activity_alert_dialog_message_account_blocked">Password is incorrect.\nYou have typed incorrect password 10 times. Your account is blocked for 15 min</string>

@@ -30,11 +30,12 @@ public class CustomLayoutViewSetup {
         mAuthor.setTextColor(Color.parseColor("#000000"));
     }
 
-    public static void SetButtonView(RelativeLayout layout, TextView buttonText, TextView badgeText, String buttonTitle) {
+    public static void SetButtonView(RelativeLayout layout, TextView buttonText, TextView badgeText, String buttonTitle, boolean isEnabled) {
+        layout.setEnabled(isEnabled);
         GradientDrawable shape = new GradientDrawable();
         float[] i = {40, 40, 40, 40, 40, 40, 0, 0};
         shape.setCornerRadii(i);
-        shape.setColor(Color.parseColor("#F03F51B5"));
+
         layout.setBackground(shape);
         buttonText.setText(buttonTitle);
         buttonText.setTextSize(40);
@@ -42,11 +43,17 @@ public class CustomLayoutViewSetup {
         buttonText.setAllCaps(true);
         GradientDrawable shapeBadge = new GradientDrawable();
         shapeBadge.setCornerRadii(new float[]{40, 40, 40, 40, 40, 40, 0, 0});
-        shapeBadge.setColor(Color.parseColor("#FF303F9F"));
+
         badgeText.setBackground(shapeBadge);
         badgeText.setTextColor(Color.parseColor("#FFFFFFFF"));
         badgeText.setVisibility(View.GONE);
-
+        if (isEnabled) {
+            shape.setColor(Color.parseColor("#F03F51B5"));
+            shapeBadge.setColor(Color.parseColor("#FF303F9F"));
+        } else {
+            shape.setColor(Color.parseColor("#999a97"));
+            shapeBadge.setColor(Color.parseColor("#757575"));
+        }
     }
 
     public static void SetLoginLayout(LoginActivity loginActivity, TextView mAuthor, ImageView mLogo, RelativeLayout mLayout, Toolbar navigationToolBar) {

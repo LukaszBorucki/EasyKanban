@@ -1,27 +1,29 @@
 package co.borucki.easykanban.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import co.borucki.easykanban.AndroidApplication;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
+import co.borucki.easykanban.repository.ProductRepository;
+import co.borucki.easykanban.repository.ProductRepositoryImpl;
+import co.borucki.easykanban.statics.ImageBitmap;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ScannedProductAdapter extends RecyclerView.Adapter<ScannedProductAdapter.ScannedProductViewHolder> {
+    private final ProductRepository mProductRepository = ProductRepositoryImpl.getInstance();
     private final LayoutInflater mLayoutInflater;
     private final List<ScannedProduct> mData = new ArrayList<>();
     private View.OnLongClickListener mOnLongClickListener;
@@ -42,12 +44,14 @@ public class ScannedProductAdapter extends RecyclerView.Adapter<ScannedProductAd
     public void onBindViewHolder(ScannedProductAdapter.ScannedProductViewHolder holder, int position) {
         ScannedProduct mScannedProduct = mData.get(position);
         Resources res = holder.itemView.getContext().getResources();
+        Product product = mProductRepository.findProductById(mScannedProduct.getProductId());
 
         holder.mScannedDate.setText(res.getString(R.string.scanned_product_adapter_date_time, mScannedProduct.getTimeStamp()));//getString()+mScannedProduct.getTimeStamp());
         holder.mProductCode.setText(mScannedProduct.getProductId());
-        holder.mProductName.setText(String.valueOf(mScannedProduct.getId()));
+        holder.mProductName.setText(product.getDescription());
         holder.mDelete.setTag(mScannedProduct);
         holder.mDelete.setOnClickListener(mOnButtonClickListener);
+        holder.mCircleImage.setImageBitmap(ImageBitmap.decodeImageFromByteArrayToBitmap(product.getPhoto()));
     }
 
     @Override
@@ -72,6 +76,8 @@ public class ScannedProductAdapter extends RecyclerView.Adapter<ScannedProductAd
         TextView mProductName;
         @BindView(R.id.scanned_product_delete)
         ImageView mDelete;
+        @BindView(R.id.scanned_product_circle_image)
+        ImageView mCircleImage;
 
         private ScannedProductViewHolder(View itemView) {
             super(itemView);

@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import co.borucki.easykanban.R;
 
 public class EasyKanbanSharedPreference {
@@ -25,6 +30,12 @@ public class EasyKanbanSharedPreference {
     private static final String LOGIN_ACTIVITY_TOOL_BAR_TEXT_COLOR = "Login activity tool bar text color";
     private static final String LOGIN_ACTIVITY_TOOL_BAR_COLOR = "Login activity tool bar color";
     private static final String LOGIN_ACTIVITY_TOOL_BAR_ICON = "Login activity tool bar icon";
+    private static final String CUSTOMER_NAME = "Customer name";
+    private static final String CUSTOMER_MAIL_ADDRESS = "Customer_mail_address";
+    private static final String CUSTOMER_MAIL_PASSWORD = "Customer mail password";
+    private static final String CUSTOMER_MAIL_HOST = "Customer mail host";
+    private static final String CUSTOMER_MAIL_SMTPPORT = "Customer mail SMTP port";
+    private static final String CUSTOMER_MAIL_REVEIVER_LIST = "Customer receiver lists";
     private final SharedPreferences mSharedPreferences;
     private Context context;
 
@@ -160,6 +171,55 @@ public class EasyKanbanSharedPreference {
 
     public String getLoginToolBarIcon() {
         return mSharedPreferences.getString(LOGIN_ACTIVITY_TOOL_BAR_ICON, "");
+    }
+
+    public void setCustomerName(String name) {
+        setSharedPreferencesString(CUSTOMER_NAME, name, "String");
+
+    }
+
+    public String getCustomerName() {
+        return mSharedPreferences.getString(CUSTOMER_NAME, "");
+    }
+
+    public void setMailAddress(String mailAddress) {
+        setSharedPreferencesString(CUSTOMER_MAIL_ADDRESS, mailAddress, "String");
+    }
+
+    public String getMailAddress() {
+        return mSharedPreferences.getString(CUSTOMER_MAIL_ADDRESS, "");
+    }
+
+    public void setMailPassword(String mailPassword) {
+        setSharedPreferencesString(CUSTOMER_MAIL_PASSWORD, mailPassword, "String");
+    }
+
+    public String getMailPassword() {
+        return mSharedPreferences.getString(CUSTOMER_MAIL_PASSWORD, "");
+    }
+
+    public void setMailHost(String mailHost) {
+        setSharedPreferencesString(CUSTOMER_MAIL_HOST, mailHost, "String");
+    }
+
+    public String getMailHost() {
+        return mSharedPreferences.getString(CUSTOMER_MAIL_HOST, "");
+    }
+
+    public void setMailSMTPPort(int mailSMTPPort) {
+        setSharedPreferencesString(CUSTOMER_MAIL_SMTPPORT, mailSMTPPort, "int");
+    }
+
+    public int getMailSMTPPort() {
+        return mSharedPreferences.getInt(CUSTOMER_MAIL_SMTPPORT, -1);
+    }
+
+    public void setMailTo(String mailTo) {
+        setSharedPreferencesString(CUSTOMER_MAIL_REVEIVER_LIST, mailTo, "String");
+    }
+
+    public String getMailTo() {
+        return mSharedPreferences.getString(CUSTOMER_MAIL_REVEIVER_LIST, "");
     }
 
     private void setSharedPreferencesString(String key, @NonNull Object value, String type) {

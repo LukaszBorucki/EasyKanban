@@ -9,14 +9,15 @@
         android:id="@+id/scanned_product_confirmation_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:textStyle="bold|italic" />
 
     <ImageView
-        android:contentDescription="@string/scanned_product_confirmation_image"
         android:id="@+id/scanned_product_confirmation_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:contentDescription="@string/scanned_product_confirmation_image" />
 
     <TextView
         android:id="@+id/scanned_product_confirmation_text"

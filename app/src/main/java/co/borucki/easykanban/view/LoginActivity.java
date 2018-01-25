@@ -33,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.asyncTask.UserAsyncTask;
 import co.borucki.easykanban.model.User;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
@@ -138,7 +139,12 @@ public class LoginActivity extends AppCompatActivity {
                     if (user.isBlocked()) {
                         showErrorDialog(getString(R.string.login_activity_error_user_is_blocked, user.getName(), user.getSurname()), true, false);
                     } else {
-                        long periodInSeconds = DateTimeCounter.getPeriodInSeconds(user.getLastLogin());
+                        long periodInSeconds;
+                        if (user.getLastLogin() != null) {
+                            periodInSeconds = DateTimeCounter.getPeriodInSeconds(user.getLastLogin());
+                        } else {
+                            periodInSeconds = 900;
+                        }
                         if (periodInSeconds < 900) {
                             showErrorDialog(
                                     getString(
@@ -148,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                     , false, false);
                         } else {
                             user.setPossibleLoginTry(10);
-                            mUserRep.saveUser(user);
+                            mUserRep.updateUser(user);
                             enableEditTexts();
                             showSoftKeyboard();
                         }
@@ -270,7 +276,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             user.setPossibleLoginTry(user.getPossibleLoginTry() - 1);
             user.setLastLogin(DateTimeCounter.getDateTime());
-            mUserRep.saveUser(user);
+            mUserRep.updateUser(user);
             if (user.getPossibleLoginTry() > 0) {
                 showErrorDialog(
                         getString(
@@ -287,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             user.setPossibleLoginTry(10);
             user.setLastLogin(DateTimeCounter.getDateTime());
-            mUserRep.saveUser(user);
+            mUserRep.updateUser(user);
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("USER_ID", user.getId());
             startActivity(intent);
@@ -341,11 +347,8 @@ public class LoginActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         } else if (item.getItemId() == R.id.load_data) {
-            SampleData.loadUsers();
-            mUsers.clear();
-            mUsers = mUserRep.getAllUsers();
+            new UserAsyncTask(spinnerArray, adapter, LoginActivity.this).execute();
             spinnerArray.clear();
-            setSpinnerArray();
             adapter.notifyDataSetChanged();
         }
 

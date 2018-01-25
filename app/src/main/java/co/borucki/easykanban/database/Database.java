@@ -38,7 +38,13 @@ public interface Database {
 
     void delete(ScannedProduct scannedProduct);
 
+    void delete(List<ScannedProduct> scannedProducts);
+
     Product findProductById(String id);
 
     void saveProduct(Product product);
+
+    void updateUser(User user);
+
+    void updateUser(List<User> users);
 }

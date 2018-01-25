@@ -1,31 +1,20 @@
-package co.borucki.easykanban.model;
+package co.borucki.easykanban.dto;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable(tableName = "user")
-public class User {
-    @DatabaseField(columnName = "id", id = true)
+public class UserDTO {
     private long id;
-    @DatabaseField(columnName = "user_name")
     private String name;
-    @DatabaseField(columnName = "user_surname")
     private String surname;
-    @DatabaseField(columnName = "user_password")
     private String password;
-    @DatabaseField(columnName = "user_is_blocked")
-    private boolean isBlocked;
-    @DatabaseField(columnName = "user_permission")
+    private int isBlocked;
     private int permissions;
-    @DatabaseField(columnName = "last_login")
     private String lastLogin;
-    @DatabaseField(columnName = "login_try")
     private int possibleLoginTry;
+    private int forceChanges;
 
-    public User() {
+    public UserDTO() {
     }
 
-    public User(long id, String name, String surname, String password, boolean isBlocked, int permissions, String lastLogin, int possibleLoginTry) {
+    public UserDTO(long id, String name, String surname, String password, int isBlocked, int permissions, String lastLogin, int possibleLoginTry, int forceChanges) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -34,6 +23,7 @@ public class User {
         this.permissions = permissions;
         this.lastLogin = lastLogin;
         this.possibleLoginTry = possibleLoginTry;
+        this.forceChanges = forceChanges;
     }
 
     public long getId() {
@@ -68,11 +58,11 @@ public class User {
         this.password = password;
     }
 
-    public boolean isBlocked() {
+    public int isBlocked() {
         return isBlocked;
     }
 
-    public void setBlocked(boolean blocked) {
+    public void setBlocked(int blocked) {
         isBlocked = blocked;
     }
 
@@ -98,5 +88,13 @@ public class User {
 
     public void setPossibleLoginTry(int possibleLoginTry) {
         this.possibleLoginTry = possibleLoginTry;
+    }
+
+    public int isForceChanges() {
+        return forceChanges;
+    }
+
+    public void setForceChanges(int forceChanges) {
+        this.forceChanges = forceChanges;
     }
 }

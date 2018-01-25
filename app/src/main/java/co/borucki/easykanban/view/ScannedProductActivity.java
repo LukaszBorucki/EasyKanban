@@ -1,10 +1,24 @@
 package co.borucki.easykanban.view;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,16 +31,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
+import java.util.List;
+
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.borucki.easykanban.Mail;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.adapter.ScannedProductAdapter;
 import co.borucki.easykanban.model.EventLog;
@@ -34,6 +53,8 @@ import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.model.ScannedType;
 import co.borucki.easykanban.model.User;
+import co.borucki.easykanban.repository.CustomDataRepository;
+import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.repository.EventLogRepository;
 import co.borucki.easykanban.repository.EventLogRepositoryImpl;
 import co.borucki.easykanban.repository.ProductRepository;
@@ -50,10 +71,11 @@ import co.borucki.easykanban.statics.SampleData;
 public class ScannedProductActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 101;
     private static final int REQUEST_CODE = 200;
-    private UserRepository mUserRepo = UserRepositoryImpl.getInstance();
-    private ProductRepository mProductRepo = ProductRepositoryImpl.getInstance();
-    private ScannedProductRepository mScannedProductRepo = ScannedProductRepositoryImpl.getInstance();
+    private final UserRepository mUserRepo = UserRepositoryImpl.getInstance();
+    private final ProductRepository mProductRepo = ProductRepositoryImpl.getInstance();
+    private final ScannedProductRepository mScannedProductRepo = ScannedProductRepositoryImpl.getInstance();
     private final EventLogRepository mLogRepo = EventLogRepositoryImpl.getInstance();
+    private final CustomDataRepository mCustomRepo = CustomDataRepositoryImpl.getInstance();
 
     private ScannedProductAdapter mAdapter;
     private long mUserId;
@@ -67,6 +89,8 @@ public class ScannedProductActivity extends AppCompatActivity {
     Toolbar navigationToolBar;
     @BindView(R.id.send_lists)
     Button mSendList;
+    private boolean isSent;
+    private StringBuilder stringBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,22 +189,25 @@ public class ScannedProductActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        vibration();
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null) {
                 final Barcode barcode = data.getParcelableExtra("barcode");
                 Product product = mProductRepo.findProductById(barcode.displayValue);
                 if (product == null) {
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(ScannedProductActivity.this);
                     builder.setTitle(R.string.scanned_product_not_exist_alert_title);
                     builder.setMessage(getString(R.string.scanned_product_not_exist_alert_message, barcode.displayValue));
                     builder.setCancelable(true);
                     builder.show();
+
                 } else {
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setCancelable(false);
                     LayoutInflater inflater = this.getLayoutInflater();
-                    final View dialogView = inflater.inflate(R.layout.scanned_product_confirmation,null);
+                    final View dialogView = inflater.inflate(R.layout.scanned_product_confirmation, null);
                     final TextView productDescription = dialogView.findViewById(R.id.scanned_product_confirmation_text);
                     final TextView dialogTitle = dialogView.findViewById(R.id.scanned_product_confirmation_title);
                     final TextView position = dialogView.findViewById(R.id.scanned_product_confirmation_position);
@@ -239,6 +266,142 @@ public class ScannedProductActivity extends AppCompatActivity {
 
 
             }
+        }
+    }
+
+    @OnClick(R.id.send_lists)
+    public void OnClickListSend() {
+        List<ScannedProduct> scannedProducts = mScannedProductRepo
+                .getAllScannedProductByType(list_type.getType().toUpperCase());
+        stringBuilder = new StringBuilder();
+        stringBuilder.append("List of scanned products >>");
+        stringBuilder.append(list_type.getType().toString().toUpperCase());
+        stringBuilder.append("<<:\n\n");
+        stringBuilder.append("No.\t|\tProduct Id\t|\tProduct description\t|\tQuantity\t|\tScanned on\t|\n");
+
+        int counter = 1;
+        for (ScannedProduct scannedProduct : scannedProducts) {
+            stringBuilder.append(counter++);
+            stringBuilder.append("\t|\t");
+            stringBuilder.append(scannedProduct.getProductId());
+            stringBuilder.append("\t|\t");
+            Product product = mProductRepo.findProductById(scannedProduct.getProductId());
+            stringBuilder.append(product.getDescription());
+            stringBuilder.append("\t|\t");
+            stringBuilder.append(scannedProduct.getQuantity());
+            stringBuilder.append(" ");
+            stringBuilder.append(product.getUnit());
+            stringBuilder.append("\t|\t");
+            stringBuilder.append(scannedProduct.getTimeStamp());
+            stringBuilder.append("\t|\n");
+        }
+        sendMessage();
+    }
+
+    private void sendMessage() {
+
+        String[] recipients = mCustomRepo.getMailTo().split(";");
+        SendEmailAsyncTask email = new SendEmailAsyncTask();
+        email.m = new Mail(mCustomRepo.getMailAddress(), mCustomRepo.getMailPassword());
+        email.m.set_from(mCustomRepo.getMailAddress());
+        email.m.setBody(stringBuilder.toString());
+        email.m.set_to(recipients);
+        email.m.set_host(mCustomRepo.getMailHost());
+        email.m.set_port(String.valueOf(mCustomRepo.getMailSMTPPort()));
+        email.m.set_sport(String.valueOf(mCustomRepo.getMailSMTPPort()));
+        email.m.set_subject(mCustomRepo.getCustomerName() + "-" + list_type.getType().toUpperCase());
+        email.execute();
+    }
+
+    class SendEmailAsyncTask extends AsyncTask<Void, Void, Boolean> {
+        Mail m;
+        private ProgressDialog progressDialog;
+
+        public SendEmailAsyncTask() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            progressDialog = new ProgressDialog(ScannedProductActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle("Send lists by mail");
+            progressDialog.show();
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (isSent) {
+                mLogRepo.saveEventLog(
+                        new EventLog(1, DateTimeCounter.getDateTime(), mUserId, "sent: \n" + stringBuilder.toString(), "SEND MAIL")
+                );
+                mScannedProductRepo.delete(mScannedProductRepo
+                        .getAllScannedProductByType(list_type.getType().toUpperCase()));
+                refreshData();
+
+            } else {
+                mLogRepo.saveEventLog(
+                        new EventLog(1, DateTimeCounter.getDateTime(), mUserId, "Failed to send list by mail", "SEND MAIL")
+                );
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ScannedProductActivity.this);
+                alertDialog.setCancelable(true);
+                alertDialog.setTitle("Error!");
+                alertDialog.setMessage("Failed to send list by mail\nCheck Internet connection and try again later");
+                alertDialog.setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+            }
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                isSent = m.send();
+                return true;
+            } catch (AuthenticationFailedException e) {
+                e.printStackTrace();
+                return false;
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
+
+    public void vibration() {
+        final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        final int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float percent = 0.7f;
+        final int volumeLevel = (int) (maxVolume * percent);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeLevel, 0);
+
+        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+        mediaPlayer.start();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                mediaPlayer.stop();
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
+            }
+        }, 300);
+
+
+        final Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            v.vibrate(300);
         }
     }
 }

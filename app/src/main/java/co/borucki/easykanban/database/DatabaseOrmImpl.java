@@ -60,7 +60,30 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     //<User>
     @Override
     public void saveUser(User user) {
+        if (mUserDao.queryForEq("id", user.getId()).size() == 0) {
+            mUserDao.create(user);
+        }
+    }
+
+    @Override
+    public void saveUsers(List<User> users) {
+        for (User user : users) {
+            saveUser(user);
+        }
+
+
+    }
+
+    @Override
+    public void updateUser(User user) {
         mUserDao.createOrUpdate(user);
+    }
+
+    @Override
+    public void updateUser(List<User> users) {
+        for (User user : users) {
+            mUserDao.update(user);
+        }
     }
 
     @Override
@@ -77,13 +100,8 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     }
 
     @Override
-    public void saveUsers(List<User> users) {
-        mUserDao.create(users);
-    }
-
-    @Override
     public List<User> getAllUsers() {
-        return mUserDao.queryForAll();
+        return mUserDao.queryForEq("user_is_blocked", false);
     }
 
     //<User/>
@@ -163,6 +181,11 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     @Override
     public void delete(ScannedProduct scannedProduct) {
         mScannedProductDao.delete(scannedProduct);
+    }
+
+    @Override
+    public void delete(List<ScannedProduct> scannedProducts) {
+        mScannedProductDao.delete(scannedProducts);
     }
     //<ScannedProduct/>
     //<Product>

@@ -20,11 +20,13 @@ public class Product {
     private int rackShelfRowNo;
     @DatabaseField(columnName = "producer")
     private String producer;
+    @DatabaseField(columnName = "unit")
+    private String unit;
 
     public Product() {
     }
 
-    public Product(String productId, byte[] photo, String description, int rackNo, int rackShelfNo, int rackShelfRowNo, String producer) {
+    public Product(String productId, byte[] photo, String description, int rackNo, int rackShelfNo, int rackShelfRowNo, String producer, String unit) {
         this.productId = productId;
         this.photo = photo;
         this.description = description;
@@ -32,6 +34,7 @@ public class Product {
         this.rackShelfNo = rackShelfNo;
         this.rackShelfRowNo = rackShelfRowNo;
         this.producer = producer;
+        this.unit = unit;
     }
 
     public String getProductId() {
@@ -88,5 +91,13 @@ public class Product {
 
     public void setProducer(String producer) {
         this.producer = producer;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

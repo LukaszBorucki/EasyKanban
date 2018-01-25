@@ -12,12 +12,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.model.ScannedType;
+import co.borucki.easykanban.model.User;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
+import co.borucki.easykanban.repository.UserRepository;
+import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 
 public class MainActivity extends AppCompatActivity {
     private final IncomingMessageRepository mMessageRepo = IncomingMessageRepositoryImpl.getInstance();
+    private final UserRepository mUserRepo = UserRepositoryImpl.getInstance();
     @BindView(R.id.usedProductButton)
     RelativeLayout mUsedProductButton;
     @BindView(R.id.usedProductButtonText)
@@ -47,16 +51,18 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_activity_author)
     TextView mAuthor;
     private long userId;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setUpButtons();
-        setButtonOnClick();
         Intent intent = getIntent();
         userId = intent.getLongExtra("USER_ID", 0);
+        mUser = mUserRepo.getUserById(userId);
+        setUpButtons();
+        setButtonOnClick();
         CustomLayoutViewSetup.SetMainLayoutView(mLogo, mAuthor);
         CustomLayoutViewSetup.SetMessageBadge(mMessageButtonBadge);
         CustomLayoutViewSetup.SetScannedBadge(mUsedProductButtonBadge, ScannedType.USED.getType().toUpperCase());
@@ -118,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpButtons() {
-        CustomLayoutViewSetup.SetButtonView(mUsedProductButton, mUsedProductButtonText, mUsedProductButtonBadge, "Used product");
-        CustomLayoutViewSetup.SetButtonView(mReceivedProductButton, mReceivedProductButtonText, mReceivedProductButtonBadge, "Received product");
-        CustomLayoutViewSetup.SetButtonView(mMessageButton, mMessageButtonText, mMessageButtonBadge, "Incoming message");
-        CustomLayoutViewSetup.SetButtonView(mStocktakingProductButton, mStocktakingProductButtonText, mStocktakingProductButtonBadge, "Stocktaking");
+        CustomLayoutViewSetup.SetButtonView(mUsedProductButton, mUsedProductButtonText, mUsedProductButtonBadge, "Used product", (mUser.getPermissions() & 1) == 1 ? true : false);
+        CustomLayoutViewSetup.SetButtonView(mReceivedProductButton, mReceivedProductButtonText, mReceivedProductButtonBadge, "Received product", (mUser.getPermissions() & 2) == 2 ? true : false);
+        CustomLayoutViewSetup.SetButtonView(mMessageButton, mMessageButtonText, mMessageButtonBadge, "Incoming message", (mUser.getPermissions() & 4) == 4 ? true : false);
+        CustomLayoutViewSetup.SetButtonView(mStocktakingProductButton, mStocktakingProductButtonText, mStocktakingProductButtonBadge, "Stocktaking", (mUser.getPermissions() & 8) == 8 ? true : false);
     }
 
     void startLoginIntent() {

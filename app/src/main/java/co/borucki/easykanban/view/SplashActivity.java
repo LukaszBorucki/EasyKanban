@@ -21,10 +21,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.asyncTask.CustomerAsyncTask;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.statics.Device;
 import co.borucki.easykanban.statics.ImageBitmap;
+import co.borucki.easykanban.statics.InternetAccess;
 import co.borucki.easykanban.statics.LocaleHelper;
 
 public class SplashActivity extends AppCompatActivity {
@@ -62,6 +64,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        if (InternetAccess.isOnLine(this) && mRepository.getCustomerName().equals("")) {
+            new CustomerAsyncTask().execute();
+        }
         loadCustomDesign();
         mSkipCounter.setVisibility(View.INVISIBLE);
         if (mRepository.getIMEI().equals("")) {

@@ -177,4 +177,64 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
     public String getLoginToolBarIcon() {
         return mSharedPref.getLoginToolBarIcon();
     }
+
+    @Override
+    public void setCustomerName(String name) {
+        mSharedPref.setCustomerName(name);
+    }
+
+    @Override
+    public String getCustomerName() {
+        return mSharedPref.getCustomerName();
+    }
+
+    @Override
+    public void setMailAddress(String mailAddress) {
+        mSharedPref.setMailAddress(mailAddress);
+    }
+
+    @Override
+    public String getMailAddress() {
+        return mSharedPref.getMailAddress();
+    }
+
+    @Override
+    public void setMailPassword(String mailPassword) {
+        mSharedPref.setMailPassword(mailPassword);
+    }
+
+    @Override
+    public String getMailPassword() {
+        return mSharedPref.getMailPassword();
+    }
+
+    @Override
+    public void setMailHost(String mailHost) {
+        mSharedPref.setMailHost(mailHost);
+    }
+
+    @Override
+    public String getMailHost() {
+        return mSharedPref.getMailHost();
+    }
+
+    @Override
+    public void setMailSMTPPort(int mailSMTPPort) {
+        mSharedPref.setMailSMTPPort(mailSMTPPort);
+    }
+
+    @Override
+    public int getMailSMTPPort() {
+        return mSharedPref.getMailSMTPPort();
+    }
+
+    @Override
+    public void setMailTo(String mailTo) {
+        mSharedPref.setMailTo(mailTo);
+    }
+
+    @Override
+    public String getMailTo() {
+        return mSharedPref.getMailTo();
+    }
 }

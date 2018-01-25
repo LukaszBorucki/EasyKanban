@@ -12,4 +12,6 @@ public interface ScannedProductRepository {
     void save(ScannedProduct scannedProduct);
 
     void delete(ScannedProduct scannedProduct);
+
+    void delete(List<ScannedProduct> scannedProducts);
 }

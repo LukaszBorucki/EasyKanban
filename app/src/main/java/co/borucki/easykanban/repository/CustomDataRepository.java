@@ -67,4 +67,28 @@ public interface CustomDataRepository {
     void setLoginToolBarIcon(String icon);
 
     String getLoginToolBarIcon();
+
+    void setCustomerName(String name);
+
+    String getCustomerName();
+
+    void setMailAddress(String mailAddress);
+
+    String getMailAddress();
+
+    void setMailPassword(String mailPassword);
+
+    String getMailPassword();
+
+    void setMailHost(String mailHost);
+
+    String getMailHost();
+
+    void setMailSMTPPort(int mailSMTPPort);
+
+    int getMailSMTPPort();
+
+    void setMailTo(String mailTo);
+
+    String getMailTo();
 }
