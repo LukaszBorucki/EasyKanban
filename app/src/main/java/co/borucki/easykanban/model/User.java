@@ -25,8 +25,7 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, String surname, String password, boolean isBlocked
-            , int permissions, String lastLogin, int possibleLoginTry) {
+    public User(long id, String name, String surname, String password, boolean isBlocked, int permissions, String lastLogin, int possibleLoginTry) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -99,5 +98,10 @@ public class User {
 
     public void setPossibleLoginTry(int possibleLoginTry) {
         this.possibleLoginTry = possibleLoginTry;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + surname;
     }
 }

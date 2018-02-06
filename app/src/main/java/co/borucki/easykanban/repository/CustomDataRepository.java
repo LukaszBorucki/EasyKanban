@@ -1,7 +1,6 @@
 package co.borucki.easykanban.repository;
 
 
-import android.content.pm.InstrumentationInfo;
 
 public interface CustomDataRepository {
     String getLogo();
@@ -12,59 +11,36 @@ public interface CustomDataRepository {
 
     void setIMEI(String imei);
 
-    long getSplashScreenTime();
+    void setCustomerName(String name);
 
-    void setSplashScreenTime(long seconds);
+    String getCustomerName();
 
-    void setSplashScreenTextVisible(int number);
+    void setMailAddress(String mailAddress);
 
-    int getSplashScreenTextVisible();
+    String getMailAddress();
 
-    void setSplashScreenCustomText(String text);
+    void setMailPassword(String mailPassword);
 
-    String getSplashScreenCustomText();
+    String getMailPassword();
 
-    void setSplashScreenThanksText(String text);
+    void setMailHost(String mailHost);
 
-    String getSplashScreenThanksText();
+    String getMailHost();
 
-    void setSplashScreenCustomTextSize(float textSize);
+    void setMailSMTPPort(int mailSMTPPort);
 
-    float getSplashScreenCustomTextSize();
+    int getMailSMTPPort();
 
-    void setSplashScreenThanksTextSize(float textSize);
+    void setMailTo(String mailTo);
 
-    float getSplashScreenThanksTextSize();
+    String getMailTo();
 
-    void setSplashLayoutColor(String color);
+    void setCommercialLicence(boolean isCommercial);
 
-    String getSplashLayoutColor();
+    boolean isCommercialLicence();
 
-    void setSplashTextColor(String textColor);
+    void setCodeType(int codeType);
 
-    String getSplashTextColor();
+    int getCodeType();
 
-    void setLoginLayoutColor(String color);
-
-    String getLoginLayoutColor();
-
-    void setLoginTextColor(String textColor);
-
-    String getLoginTextColor();
-
-    void setLoginToolBarColor(String color);
-
-    String getLoginToolBarColor();
-
-    void setLoginToolBarTextColor(String color);
-
-    String getLoginToolBarTextColor();
-
-    void setLoginStatusBarColor(String color);
-
-    String getLoginStatusBarColor();
-
-    void setLoginToolBarIcon(String icon);
-
-    String getLoginToolBarIcon();
 }

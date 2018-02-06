@@ -35,7 +35,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public void updateUser(User user) {
+        mDatabase.updateUser(user);
+    }
+
+    @Override
+    public void updateUser(List<User> users) {
+        mDatabase.updateUser(users);
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return mDatabase.getAllUsers();
+    }
+
+    @Override
+    public void removeAll() {
+        mDatabase.removeAllUser();
     }
 }

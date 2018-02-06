@@ -10,12 +10,10 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
 
     private CustomDataRepositoryImpl() {
         mSharedPref = AndroidApplication.getSharedPreferences();
-
     }
 
     public static CustomDataRepositoryImpl getInstance() {
         return mInstance;
-
     }
 
     @Override
@@ -39,142 +37,82 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
     }
 
     @Override
-    public long getSplashScreenTime() {
-        return mSharedPref.getSplashScreenTime();
+    public void setCustomerName(String name) {
+        mSharedPref.setCustomerName(name);
     }
 
     @Override
-    public void setSplashScreenTime(long seconds) {
-        mSharedPref.setSplashScreenTime(seconds);
+    public String getCustomerName() {
+        return mSharedPref.getCustomerName();
     }
 
     @Override
-    public void setSplashScreenTextVisible(int number) {
-        mSharedPref.setSplashScreenTextVisible(number);
+    public void setMailAddress(String mailAddress) {
+        mSharedPref.setMailAddress(mailAddress);
     }
 
     @Override
-    public int getSplashScreenTextVisible() {
-        return mSharedPref.getSplashScreenTextVisible();
+    public String getMailAddress() {
+        return mSharedPref.getMailAddress();
     }
 
     @Override
-    public void setSplashScreenCustomText(String text) {
-        mSharedPref.setSplashScreenCustomText(text);
+    public void setMailPassword(String mailPassword) {
+        mSharedPref.setMailPassword(mailPassword);
     }
 
     @Override
-    public String getSplashScreenCustomText() {
-        return mSharedPref.getSplashScreenCustomText();
+    public String getMailPassword() {
+        return mSharedPref.getMailPassword();
     }
 
     @Override
-    public void setSplashScreenThanksText(String text) {
-        mSharedPref.setSplashScreenThanksText(text);
+    public void setMailHost(String mailHost) {
+        mSharedPref.setMailHost(mailHost);
     }
 
     @Override
-    public String getSplashScreenThanksText() {
-        return mSharedPref.getSplashScreenThanksText();
+    public String getMailHost() {
+        return mSharedPref.getMailHost();
     }
 
     @Override
-    public void setSplashScreenCustomTextSize(float textSize) {
-        mSharedPref.setSplashScreenCustomTextSize(textSize);
+    public void setMailSMTPPort(int mailSMTPPort) {
+        mSharedPref.setMailSMTPPort(mailSMTPPort);
     }
 
     @Override
-    public float getSplashScreenCustomTextSize() {
-        return mSharedPref.getSplashScreenCustomTextSize();
+    public int getMailSMTPPort() {
+        return mSharedPref.getMailSMTPPort();
     }
 
     @Override
-    public void setSplashScreenThanksTextSize(float textSize) {
-        mSharedPref.setSplashScreenThanksTextSize(textSize);
+    public void setMailTo(String mailTo) {
+        mSharedPref.setMailTo(mailTo);
     }
 
     @Override
-    public float getSplashScreenThanksTextSize() {
-        return mSharedPref.getSplashScreenThanksTextSize();
+    public String getMailTo() {
+        return mSharedPref.getMailTo();
     }
 
     @Override
-    public void setSplashLayoutColor(String color) {
-        mSharedPref.setSplashLayoutColor(color);
+    public void setCommercialLicence(boolean isCommercial) {
+        mSharedPref.setCommercialLicence(isCommercial);
     }
 
     @Override
-    public String getSplashLayoutColor() {
-        return mSharedPref.getSplashLayoutColor();
+    public boolean isCommercialLicence() {
+        return mSharedPref.isCommercialLicence();
     }
 
     @Override
-    public void setSplashTextColor(String textColor) {
-        mSharedPref.setSplashTextColor(textColor);
+    public void setCodeType(int codeType) {
+        mSharedPref.setCodeType(codeType);
     }
 
     @Override
-    public String getSplashTextColor() {
-        return mSharedPref.getSplashTextColor();
-    }
-
-    @Override
-    public void setLoginLayoutColor(String color) {
-        mSharedPref.setLoginLayoutColor(color);
-    }
-
-    @Override
-    public String getLoginLayoutColor() {
-        return mSharedPref.getLoginLayoutColor();
-    }
-
-    @Override
-    public void setLoginTextColor(String textColor) {
-        mSharedPref.setLoginTextColor(textColor);
-    }
-
-    @Override
-    public String getLoginTextColor() {
-        return mSharedPref.getLoginTextColor();
-    }
-
-    @Override
-    public void setLoginToolBarColor(String color) {
-        mSharedPref.setLoginToolBarColor(color);
-    }
-
-    @Override
-    public String getLoginToolBarColor() {
-        return mSharedPref.getLoginToolBarColor();
-    }
-
-    @Override
-    public void setLoginToolBarTextColor(String color) {
-        mSharedPref.setLoginToolBarTextColor(color);
-    }
-
-    @Override
-    public String getLoginToolBarTextColor() {
-        return mSharedPref.getLoginToolBarTextColor();
-    }
-
-    @Override
-    public void setLoginStatusBarColor(String color) {
-        mSharedPref.setLoginStatusBarColor(color);
-    }
-
-    @Override
-    public String getLoginStatusBarColor() {
-        return mSharedPref.getLoginStatusBarColor();
-    }
-
-    @Override
-    public void setLoginToolBarIcon(String icon) {
-        mSharedPref.setLoginToolBarIcon(icon);
-    }
-
-    @Override
-    public String getLoginToolBarIcon() {
-        return mSharedPref.getLoginToolBarIcon();
+    public int getCodeType() {
+        return mSharedPref.getCodeType();
     }
 }

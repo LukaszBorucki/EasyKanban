@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +20,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,29 +29,22 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.asyncTask.UserAsyncTask;
 import co.borucki.easykanban.model.User;
-import co.borucki.easykanban.repository.CustomDataRepository;
-import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
+import co.borucki.easykanban.repository.style.LoginStyleRepository;
+import co.borucki.easykanban.repository.style.LoginStyleRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
-import co.borucki.easykanban.statics.DataTimeCounter;
-import co.borucki.easykanban.statics.SampleData;
+import co.borucki.easykanban.statics.DateTimeCounter;
 
 public class LoginActivity extends AppCompatActivity {
-    private CustomDataRepository mCustomRep = CustomDataRepositoryImpl.getInstance();
+    private LoginStyleRepository mLoginStyleRepo = LoginStyleRepositoryImpl.getInstance();
     private final UserRepository mUserRep = UserRepositoryImpl.getInstance();
     private List<User> mUsers;
     private User user;
     private List<String> spinnerArray = new ArrayList<>();
     private ArrayAdapter<String> adapter;
-
-    @BindView(R.id.login_layout_logo)
-    ImageView mLogo;
-    @BindView(R.id.login_activity)
-    RelativeLayout mLayout;
-    @BindView(R.id.login_activity_author)
-    TextView mAuthor;
     @BindView(R.id.login_activity_spinner)
     Spinner mSpinner;
     @BindView(R.id.login_first_digit)
@@ -93,16 +82,15 @@ public class LoginActivity extends AppCompatActivity {
         hideKeyboard();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-        CustomLayoutViewSetup.SetLoginLayout(this, mAuthor, mLogo, mLayout, navigationToolBar);
+        CustomLayoutViewSetup.setLoginLayout(this, navigationToolBar);
         setSupportActionBar(navigationToolBar);
         mUsers = mUserRep.getAllUsers();
+
         if (mUsers.size() == 0) {
             disableEditTexts();
             hideKeyboard();
@@ -117,52 +105,61 @@ public class LoginActivity extends AppCompatActivity {
 
                 View v = super.getView(position, convertView, parent);
                 ((TextView) v).setTextSize(25);
-                ((TextView) v).setTextColor(Color.parseColor(mCustomRep.getLoginTextColor()));
+                ((TextView) v).setTextColor(Color.parseColor(mLoginStyleRepo.getTextColor()));
                 return v;
             }
 
             public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View v = super.getDropDownView(position, convertView, parent);
                 ((TextView) v).setGravity(Gravity.CENTER);
+                ((TextView) v).setTextColor(Color.parseColor(mLoginStyleRepo.getTextColor()));
+                ((TextView) v).setTextSize(25);
+                v.setBackgroundColor(Color.parseColor(mLoginStyleRepo.getLayoutColor()));
                 return v;
             }
         };
         mSpinner.setAdapter(adapter);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                user = mUsers.get(mSpinner.getSelectedItemPosition());
-                if (user.getPossibleLoginTry() <= 0) {
-                    hideKeyboard();
-                    disableEditTexts();
-                    if (user.isBlocked()) {
-                        showErrorDialog(getString(R.string.login_activity_error_user_is_blocked, user.getName(), user.getSurname()), true, false);
-                    } else {
-                        long periodInSeconds = DataTimeCounter.getPeriodInSeconds(user.getLastLogin());
-                        if (periodInSeconds < 900) {
-                            showErrorDialog(
-                                    getString(
-                                            R.string.login_activity_error_acount_temporarily_blocked
-                                            , (901 - periodInSeconds) / 60
-                                            , 901 - periodInSeconds - (((901 - periodInSeconds) / 60) * 60))
-                                    , false, false);
+            mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    user = mUsers.get(mSpinner.getSelectedItemPosition());
+                    if (user.getPossibleLoginTry() <= 0) {
+                        hideKeyboard();
+                        disableEditTexts();
+                        if (user.isBlocked()) {
+                            showErrorDialog(getString(R.string.login_activity_error_user_is_blocked, user.getName(), user.getSurname()), true, false);
                         } else {
-                            user.setPossibleLoginTry(10);
-                            mUserRep.saveUser(user);
-                            enableEditTexts();
-                            showSoftKeyboard();
+                            long periodInSeconds;
+                            if (user.getLastLogin() != null) {
+                                periodInSeconds = DateTimeCounter.getPeriodInSeconds(user.getLastLogin());
+                            } else {
+                                periodInSeconds = 900;
+                            }
+                            if (periodInSeconds < 900) {
+                                showErrorDialog(
+                                        getString(
+                                                R.string.login_activity_error_acount_temporarily_blocked
+                                                , (901 - periodInSeconds) / 60
+                                                , 901 - periodInSeconds - (((901 - periodInSeconds) / 60) * 60))
+                                        , false, false);
+                            } else {
+                                user.setPossibleLoginTry(10);
+                                mUserRep.updateUser(user);
+                                enableEditTexts();
+                                showSoftKeyboard();
+                            }
                         }
+                    } else {
+                        showSoftKeyboard();
+                        enableEditTexts();
                     }
-                } else {
-                    showSoftKeyboard();
-                    enableEditTexts();
                 }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+
         mFirstDigit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -265,12 +262,12 @@ public class LoginActivity extends AppCompatActivity {
         password += Integer.valueOf(mFourthDigit.getText().toString());
 
         if (password != Integer.valueOf(user.getPassword())) {
-            if (DataTimeCounter.getPeriodInSeconds(user.getLastLogin()) > 900) {
+            if (DateTimeCounter.getPeriodInSeconds(user.getLastLogin()) > 900) {
                 user.setPossibleLoginTry(10);
             }
             user.setPossibleLoginTry(user.getPossibleLoginTry() - 1);
-            user.setLastLogin(DataTimeCounter.getDateTime());
-            mUserRep.saveUser(user);
+            user.setLastLogin(DateTimeCounter.getDateTime());
+            mUserRep.updateUser(user);
             if (user.getPossibleLoginTry() > 0) {
                 showErrorDialog(
                         getString(
@@ -286,8 +283,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else {
             user.setPossibleLoginTry(10);
-            user.setLastLogin(DataTimeCounter.getDateTime());
-            mUserRep.saveUser(user);
+            user.setLastLogin(DateTimeCounter.getDateTime());
+            mUserRep.updateUser(user);
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("USER_ID", user.getId());
             startActivity(intent);
@@ -341,11 +338,8 @@ public class LoginActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         } else if (item.getItemId() == R.id.load_data) {
-            SampleData.loadUsers();
-            mUsers.clear();
-            mUsers = mUserRep.getAllUsers();
+            new UserAsyncTask(false, spinnerArray, adapter, LoginActivity.this).execute();
             spinnerArray.clear();
-            setSpinnerArray();
             adapter.notifyDataSetChanged();
         }
 

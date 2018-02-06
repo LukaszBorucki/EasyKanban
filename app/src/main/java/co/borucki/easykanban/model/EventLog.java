@@ -66,4 +66,15 @@ public class EventLog {
     public void setTag(String tag) {
         this.tag = tag;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", timeStamp='" + timeStamp + '\'' +
+                ", userId=" + userId +
+                ", eventName='" + eventName + '\'' +
+                ", tag='" + tag + '\'' +
+                '}';
+    }
 }

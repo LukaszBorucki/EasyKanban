@@ -15,4 +15,7 @@ public interface IncomingMessageRepository {
 
     long countUnreadMessages();
 
+    long getLastMessageId();
+
+    void removeAll();
 }

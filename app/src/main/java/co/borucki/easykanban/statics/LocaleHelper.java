@@ -5,40 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentManager;
-import android.util.Base64;
 
 import java.util.Locale;
 
-
-
-
 public class LocaleHelper {
-
-    public static boolean isOnLine(Context context) {
-        ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (conMgr.getActiveNetworkInfo() != null
-                && conMgr.getActiveNetworkInfo().isAvailable()
-                && conMgr.getActiveNetworkInfo().isConnected()) {
-
-            try {
-                Process p1 = Runtime.getRuntime().exec("ping -c 1 www.google.com");
-                int returnVal = p1.waitFor();
-                return (returnVal == 0);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-        }
-        return false;
-    }
 
     private static final String SELECTED_LANGUAGE = "Locale.Helper.Selected.Language";
 
@@ -106,20 +78,5 @@ public class LocaleHelper {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return context;
-    }
-
-
-
-    public static byte[] decodeImageFromStringToByteArray(String image) {
-        return Base64.decode(image, Base64.DEFAULT);
-    }
-
-    public static Bitmap decodeImageFromByteArrayToBitmap(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
-
-    public static Bitmap decodeImageFromStringToBitmap(String image) {
-        byte[] byteArrayImage = decodeImageFromStringToByteArray(image);
-        return decodeImageFromByteArrayToBitmap(byteArrayImage);
     }
 }
