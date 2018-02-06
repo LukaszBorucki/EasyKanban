@@ -5,18 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentManager;
-import android.util.Base64;
 
 import java.util.Locale;
-
-
-
 
 public class LocaleHelper {
 

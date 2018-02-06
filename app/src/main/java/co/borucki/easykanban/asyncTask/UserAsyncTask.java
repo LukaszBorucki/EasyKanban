@@ -19,7 +19,6 @@ import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
-import co.borucki.easykanban.view.LoginActivity;
 
 public class UserAsyncTask extends AsyncTask<Void, Void, List<UserDTO>> {
     private final UserRepository mUserRepo = UserRepositoryImpl.getInstance();
@@ -28,26 +27,30 @@ public class UserAsyncTask extends AsyncTask<Void, Void, List<UserDTO>> {
     private ArrayAdapter<String> adapter;
     private ProgressDialog progressDialog;
     private Activity loginActivity;
+    private boolean background;
 
-    public UserAsyncTask(List<String> spinnerArray, ArrayAdapter<String> adapter, Activity loginActivity) {
+    public UserAsyncTask(boolean background, List<String> spinnerArray, ArrayAdapter<String> adapter, Activity loginActivity) {
         this.spinnerArray = spinnerArray;
         this.adapter = adapter;
         this.loginActivity = loginActivity;
+        this.background = background;
     }
 
     @Override
     protected void onPreExecute() {
-        progressDialog = new ProgressDialog(loginActivity);
-        progressDialog.setCancelable(false);
-        progressDialog.setTitle("Loading Users data");
-        progressDialog.show();
+        if (loginActivity != null) {
+            progressDialog = new ProgressDialog(loginActivity);
+            progressDialog.setCancelable(false);
+            progressDialog.setTitle("Loading Users data");
+            progressDialog.show();
+        }
     }
 
     @Override
     protected List<UserDTO> doInBackground(Void... voids) {
-
+        String id = mCustomRepo.isCommercialLicence() ? String.valueOf(mCustomRepo.getIMEI()) : "demo";
         String link = "http://www.borucki.co/api_v2/kanban/getAllUsers?id="
-                + mCustomRepo.getIMEI();
+                + id;
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -73,6 +76,11 @@ public class UserAsyncTask extends AsyncTask<Void, Void, List<UserDTO>> {
             }
             adapter.notifyDataSetChanged();
         }
-        progressDialog.dismiss();
+        if (loginActivity != null) {
+            progressDialog.dismiss();
+        }
+        if (background) {
+            new AppConfigurationConfirmAsyncTask().execute("users");
+        }
     }
 }

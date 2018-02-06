@@ -1,5 +1,7 @@
 package co.borucki.easykanban.repository;
 
+import java.util.List;
+
 import co.borucki.easykanban.AndroidApplication;
 import co.borucki.easykanban.database.Database;
 import co.borucki.easykanban.model.Product;
@@ -25,5 +27,15 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void saveProduct(Product product) {
         mDatabase.saveProduct(product);
+    }
+
+    @Override
+    public void saveProduct(List<Product> products) {
+        mDatabase.saveProduct(products);
+    }
+
+    @Override
+    public void removeAll() {
+        mDatabase.removeAllProduct();
     }
 }

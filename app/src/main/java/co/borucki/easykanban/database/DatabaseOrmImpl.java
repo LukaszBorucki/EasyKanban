@@ -104,6 +104,11 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
         return mUserDao.queryForEq("user_is_blocked", false);
     }
 
+    @Override
+    public void removeAllUser() {
+        mUserDao.delete(mUserDao.queryForAll());
+    }
+
     //<User/>
     //<IncomingMessages>
     @Override
@@ -146,15 +151,35 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
         return counter;
     }
 
+    @Override
+    public long getLastMessageId() {
+        List<IncomingMessage> incomingMessages = mMessageDao.queryForAll();
+        if (incomingMessages.size() == 0) return 0;
+        return incomingMessages.get(incomingMessages.size() - 1).getId();
+    }
+
+    @Override
+    public void removeAllIncomingMessage() {
+        mMessageDao.delete(mMessageDao.queryForAll());
+    }
     //<IncomingMessages/>
     //<EventLog>
+
+    @Override
+    public List<EventLog> getAllEventLog() {
+        return mEventLogDao.queryForAll();
+    }
 
     @Override
     public void saveEventLog(EventLog eventLog) {
         mEventLogDao.create(eventLog);
     }
 
-    //<EventLog/>
+    @Override
+    public void removeAllEventLog() {
+        mEventLogDao.delete(mEventLogDao.queryForAll());
+    }
+//<EventLog/>
     //<ScannedProduct>
 
     @Override
@@ -187,6 +212,11 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     public void delete(List<ScannedProduct> scannedProducts) {
         mScannedProductDao.delete(scannedProducts);
     }
+
+    @Override
+    public void removeAllScannedProduct() {
+        mScannedProductDao.delete(mScannedProductDao.queryForAll());
+    }
     //<ScannedProduct/>
     //<Product>
 
@@ -202,6 +232,17 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
         mProductDao.createOrUpdate(product);
     }
 
+    @Override
+    public void saveProduct(List<Product> products) {
+        for (Product product : products) {
+            saveProduct(product);
+        }
+    }
+
+    @Override
+    public void removeAllProduct() {
+        mProductDao.delete(mProductDao.queryForAll());
+    }
     //<Product/>
 
 }

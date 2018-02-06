@@ -27,8 +27,11 @@ public interface Database {
 
     long countUnreadMessages();
 
+    void removeAllIncomingMessage();
 
     void saveEventLog(EventLog eventLog);
+
+    void removeAllEventLog();
 
     List<ScannedProduct> getAllScannedProductByType(String type);
 
@@ -44,7 +47,19 @@ public interface Database {
 
     void saveProduct(Product product);
 
+    void saveProduct(List<Product> products);
+
+    void removeAllProduct();
+
     void updateUser(User user);
 
     void updateUser(List<User> users);
+
+    long getLastMessageId();
+
+    void removeAllScannedProduct();
+
+    void removeAllUser();
+
+    List<EventLog> getAllEventLog();
 }

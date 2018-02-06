@@ -1,7 +1,6 @@
 package co.borucki.easykanban.view;
 
 import android.Manifest;
-import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,16 +8,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -29,11 +24,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
@@ -48,6 +45,7 @@ import butterknife.OnClick;
 import co.borucki.easykanban.Mail;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.adapter.ScannedProductAdapter;
+import co.borucki.easykanban.asyncTask.ProductAsyncTask;
 import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
@@ -66,7 +64,7 @@ import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DateTimeCounter;
 import co.borucki.easykanban.statics.ImageBitmap;
-import co.borucki.easykanban.statics.SampleData;
+import co.borucki.easykanban.statics.InternetAccess;
 
 public class ScannedProductActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 101;
@@ -89,6 +87,14 @@ public class ScannedProductActivity extends AppCompatActivity {
     Toolbar navigationToolBar;
     @BindView(R.id.send_lists)
     Button mSendList;
+    @BindView(R.id.scanned_product_logo)
+    ImageView mLogo;
+    @BindView(R.id.scanned_product_layout)
+    RelativeLayout mLayout;
+    @BindView(R.id.scanned_product_activity_author)
+    TextView mAuthor;
+    @BindView(R.id.scanned_product_fab)
+    FloatingActionButton mFAB;
     private boolean isSent;
     private StringBuilder stringBuilder;
 
@@ -104,9 +110,10 @@ public class ScannedProductActivity extends AppCompatActivity {
             ActivityCompat
                     .requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST);
         }
-        CustomLayoutViewSetup.SetEnableSendListButton(mSendList, list_type);
+        CustomLayoutViewSetup.setEnableSendListButton(mSendList, list_type);
         mUserId = intent.getLongExtra("USER_ID", -1);
         mUser = mUserRepo.getUserById(mUserId);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mScrollView.setLayoutManager(linearLayoutManager);
         DividerItemDecoration dividerItemDecoration
@@ -118,35 +125,19 @@ public class ScannedProductActivity extends AppCompatActivity {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                SampleData.loadProduct();
                 refreshData();
                 mRefreshLayout.setRefreshing(false);
             }
         });
         refreshData();
-        CustomLayoutViewSetup.SetScannedLayout(navigationToolBar);
-
-
-        switch (list_type) {
-            case USED:
-                navigationToolBar.setTitle(R.string.scanned_product_tool_bar_title_used_product);
-                mSendList.setText(R.string.scanned_product_send_used_list);
-                break;
-            case RECEIVED:
-                navigationToolBar.setTitle(R.string.scanned_product_tool_bar_title_delivered_product);
-                mSendList.setText(R.string.scanned_product_send_delivered_list);
-                break;
-            case STOCKTAKING:
-                navigationToolBar.setTitle(R.string.scanned_product_tool_bar_title_stocktaking);
-                mSendList.setText(R.string.scanned_product_send_stocktaking_list);
-                break;
-        }
+        CustomLayoutViewSetup.setScannedLayout(navigationToolBar, ScannedProductActivity.this, list_type, mSendList, mLayout, mLogo, mAuthor, mFAB);
+        setSupportActionBar(navigationToolBar);
     }
 
     private void refreshData() {
         mAdapter.setData(mScannedProductRepo
                 .getAllScannedProductByType(list_type.getType().toUpperCase()));
-        CustomLayoutViewSetup.SetEnableSendListButton(mSendList, list_type);
+        CustomLayoutViewSetup.setEnableSendListButton(mSendList, list_type);
 
     }
 
@@ -189,13 +180,12 @@ public class ScannedProductActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        vibration();
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            scannedBeepSignal();
             if (data != null) {
                 final Barcode barcode = data.getParcelableExtra("barcode");
                 Product product = mProductRepo.findProductById(barcode.displayValue);
                 if (product == null) {
-
                     AlertDialog.Builder builder = new AlertDialog.Builder(ScannedProductActivity.this);
                     builder.setTitle(R.string.scanned_product_not_exist_alert_title);
                     builder.setMessage(getString(R.string.scanned_product_not_exist_alert_message, barcode.displayValue));
@@ -229,7 +219,7 @@ public class ScannedProductActivity extends AppCompatActivity {
 
                     dialogTitle.setText(R.string.scanned_product_dialog_title);
 
-                    productDescription.setText(product.getProductId() + "\n" + product.getDescription());
+                    productDescription.setText(getResources().getString(R.string.product_id_and_description, product.getProductId(), product.getDescription()));
                     productLogo.setImageBitmap(ImageBitmap.decodeImageFromByteArrayToBitmap(product.getPhoto()));
 
                     builder.setView(dialogView)
@@ -271,31 +261,39 @@ public class ScannedProductActivity extends AppCompatActivity {
 
     @OnClick(R.id.send_lists)
     public void OnClickListSend() {
-        List<ScannedProduct> scannedProducts = mScannedProductRepo
-                .getAllScannedProductByType(list_type.getType().toUpperCase());
-        stringBuilder = new StringBuilder();
-        stringBuilder.append("List of scanned products >>");
-        stringBuilder.append(list_type.getType().toString().toUpperCase());
-        stringBuilder.append("<<:\n\n");
-        stringBuilder.append("No.\t|\tProduct Id\t|\tProduct description\t|\tQuantity\t|\tScanned on\t|\n");
+        if (mCustomRepo.isCommercialLicence()) {
+            List<ScannedProduct> scannedProducts = mScannedProductRepo
+                    .getAllScannedProductByType(list_type.getType().toUpperCase());
+            stringBuilder = new StringBuilder();
+            stringBuilder.append("List of scanned products >>");
+            stringBuilder.append(list_type.getType().toUpperCase());
+            stringBuilder.append("<<:\n\n");
+            stringBuilder.append("No.\t|\tProduct Id\t|\tProduct description\t|\tQuantity\t|\tScanned on\t|\n");
 
-        int counter = 1;
-        for (ScannedProduct scannedProduct : scannedProducts) {
-            stringBuilder.append(counter++);
-            stringBuilder.append("\t|\t");
-            stringBuilder.append(scannedProduct.getProductId());
-            stringBuilder.append("\t|\t");
-            Product product = mProductRepo.findProductById(scannedProduct.getProductId());
-            stringBuilder.append(product.getDescription());
-            stringBuilder.append("\t|\t");
-            stringBuilder.append(scannedProduct.getQuantity());
-            stringBuilder.append(" ");
-            stringBuilder.append(product.getUnit());
-            stringBuilder.append("\t|\t");
-            stringBuilder.append(scannedProduct.getTimeStamp());
-            stringBuilder.append("\t|\n");
+            int counter = 1;
+            for (ScannedProduct scannedProduct : scannedProducts) {
+                stringBuilder.append(counter++);
+                stringBuilder.append("\t|\t");
+                stringBuilder.append(scannedProduct.getProductId());
+                stringBuilder.append("\t|\t");
+                Product product = mProductRepo.findProductById(scannedProduct.getProductId());
+                stringBuilder.append(product.getDescription());
+                stringBuilder.append("\t|\t");
+                stringBuilder.append(scannedProduct.getQuantity());
+                stringBuilder.append(" ");
+                stringBuilder.append(product.getUnit());
+                stringBuilder.append("\t|\t");
+                stringBuilder.append(scannedProduct.getTimeStamp());
+                stringBuilder.append("\t|\n");
+            }
+            sendMessage();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(true);
+            builder.setTitle(R.string.demo_version_title);
+            builder.setMessage(R.string.demo_version_message);
+            builder.show();
         }
-        sendMessage();
     }
 
     private void sendMessage() {
@@ -377,24 +375,22 @@ public class ScannedProductActivity extends AppCompatActivity {
         }
     }
 
-    public void vibration() {
+    public void scannedBeepSignal() {
         final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        float percent = 0.7f;
-        final int volumeLevel = (int) (maxVolume * percent);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volumeLevel, 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, 0);
 
         final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
-        mediaPlayer.start();
-        new Handler().postDelayed(new Runnable() {
+        mediaPlayer.setVolume(maxVolume, maxVolume);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void run() {
-
-                mediaPlayer.stop();
+            public void onCompletion(MediaPlayer mp) {
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
+                mp.stop();
             }
-        }, 300);
+        });
+        mediaPlayer.start();
 
 
         final Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -403,5 +399,25 @@ public class ScannedProductActivity extends AppCompatActivity {
         } else {
             v.vibrate(300);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        } else if (item.getItemId() == R.id.load_products) {
+            if (InternetAccess.isOnLine(this)) {
+                new ProductAsyncTask(false).execute();
+            }
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.info_menu_logged, menu);
+        return true;
     }
 }

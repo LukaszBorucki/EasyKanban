@@ -2,6 +2,7 @@ package co.borucki.easykanban.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +20,15 @@ import co.borucki.easykanban.model.Product;
 import co.borucki.easykanban.model.ScannedProduct;
 import co.borucki.easykanban.repository.ProductRepository;
 import co.borucki.easykanban.repository.ProductRepositoryImpl;
+import co.borucki.easykanban.repository.style.ScannedStyleRepository;
+import co.borucki.easykanban.repository.style.ScannedStyleRepositoryImpl;
 import co.borucki.easykanban.statics.ImageBitmap;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ScannedProductAdapter extends RecyclerView.Adapter<ScannedProductAdapter.ScannedProductViewHolder> {
     private final ProductRepository mProductRepository = ProductRepositoryImpl.getInstance();
+    private final ScannedStyleRepository mScannedRepository = ScannedStyleRepositoryImpl.getInstance();
     private final LayoutInflater mLayoutInflater;
     private final List<ScannedProduct> mData = new ArrayList<>();
-    private View.OnLongClickListener mOnLongClickListener;
-    private View.OnClickListener mOnClickListener;
     private ImageView.OnClickListener mOnButtonClickListener;
 
     public ScannedProductAdapter(Context context) {
@@ -51,7 +52,9 @@ public class ScannedProductAdapter extends RecyclerView.Adapter<ScannedProductAd
         holder.mProductName.setText(product.getDescription());
         holder.mDelete.setTag(mScannedProduct);
         holder.mDelete.setOnClickListener(mOnButtonClickListener);
-        holder.mCircleImage.setImageBitmap(ImageBitmap.decodeImageFromByteArrayToBitmap(product.getPhoto()));
+        if (product.getPhoto()!=null) {
+            holder.mCircleImage.setImageBitmap(ImageBitmap.decodeImageFromByteArrayToBitmap(product.getPhoto()));
+        }
     }
 
     @Override
@@ -82,6 +85,15 @@ public class ScannedProductAdapter extends RecyclerView.Adapter<ScannedProductAd
         private ScannedProductViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            mScannedDate.setTextColor(Color.parseColor(mScannedRepository.getSingleRowTextColor()));
+            mProductName.setTextColor(Color.parseColor(mScannedRepository.getSingleRowTextColor()));
+            mProductCode.setTextColor(Color.parseColor(mScannedRepository.getSingleRowTextColor()));
+            if (mScannedRepository.getSingleRowDelButtonImage().equals("")) {
+                mDelete.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_delete_black_24dp));
+            } else {
+                mDelete.setImageBitmap(ImageBitmap.decodeImageFromStringToBitmap(mScannedRepository.getSingleRowDelButtonImage()));
+            }
+
         }
     }
 

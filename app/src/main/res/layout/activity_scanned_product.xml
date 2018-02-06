@@ -2,9 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scanned_product_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="co.borucki.easykanban.view.ScannedProductActivity">
+
+    <ImageView
+        android:id="@+id/scanned_product_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/custom_logo"
+        android:src="@drawable/splash_logo" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/scanned_product_tool_bar"
@@ -32,17 +42,15 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/scanned_product_scroll_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/scanned_product_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="16dp"
                 android:src="@drawable/ic_qr_code_black_24dp"
-                app:layout_anchorGravity="bottom|right|end"
-                />
+                app:layout_anchorGravity="bottom|right|end" />
         </android.support.design.widget.CoordinatorLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -42,4 +42,9 @@ public class ScannedProductRepositoryImpl implements ScannedProductRepository {
     public void delete(List<ScannedProduct> scannedProducts) {
         mDatabase.delete(scannedProducts);
     }
+
+    @Override
+    public void removeAll() {
+        mDatabase.removeAllScannedProduct();
+    }
 }

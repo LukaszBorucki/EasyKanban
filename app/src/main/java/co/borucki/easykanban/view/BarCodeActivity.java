@@ -19,8 +19,12 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.repository.CustomDataRepository;
+import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
+import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 
 public class BarCodeActivity extends Activity {
+    private final CustomDataRepository mRepo = CustomDataRepositoryImpl.getInstance();
     SurfaceView cameraView;
     BarcodeDetector barcode;
     CameraSource cameraSource;
@@ -30,26 +34,34 @@ public class BarCodeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_code);
+        CustomLayoutViewSetup.setBarCodeActivity(this);
         cameraView = findViewById(R.id.cameraView);
         cameraView.setZOrderMediaOverlay(true);
         holder = cameraView.getHolder();
         barcode = new BarcodeDetector.Builder(this)
-                .setBarcodeFormats(Barcode.QR_CODE)
+                .setBarcodeFormats(mRepo.getCodeType())
                 .build();
+
         if (!barcode.isOperational()) {
-            Toast.makeText(getApplicationContext(), "Sorry couldn't setup the detector", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext()
+                    , R.string.bar_code_detector_error
+                    , Toast.LENGTH_LONG).show();
             this.finish();
         }
+
         cameraSource = new CameraSource.Builder(this, barcode)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedFps(24)
                 .setAutoFocusEnabled(true)
                 .setRequestedPreviewSize(1920, 1024)
                 .build();
+
         cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                if (ContextCompat.checkSelfPermission(BarCodeActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat
+                        .checkSelfPermission(BarCodeActivity.this
+                                , Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                     try {
                         cameraSource.start(cameraView.getHolder());
                     } catch (IOException e) {
@@ -68,6 +80,7 @@ public class BarCodeActivity extends Activity {
 
             }
         });
+
         barcode.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {

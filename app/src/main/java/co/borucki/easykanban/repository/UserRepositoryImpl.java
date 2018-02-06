@@ -48,4 +48,9 @@ public class UserRepositoryImpl implements UserRepository {
     public List<User> getAllUsers() {
         return mDatabase.getAllUsers();
     }
+
+    @Override
+    public void removeAll() {
+        mDatabase.removeAllUser();
+    }
 }

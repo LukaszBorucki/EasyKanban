@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -22,16 +23,23 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.asyncTask.CustomerAsyncTask;
+import co.borucki.easykanban.asyncTask.UserAsyncTask;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
+import co.borucki.easykanban.repository.UserRepository;
+import co.borucki.easykanban.repository.UserRepositoryImpl;
+import co.borucki.easykanban.repository.style.SplashStyleRepository;
+import co.borucki.easykanban.repository.style.SplashStyleRepositoryImpl;
+import co.borucki.easykanban.service.TimeService;
 import co.borucki.easykanban.statics.Device;
 import co.borucki.easykanban.statics.ImageBitmap;
 import co.borucki.easykanban.statics.InternetAccess;
-import co.borucki.easykanban.statics.LocaleHelper;
 
 public class SplashActivity extends AppCompatActivity {
     private CustomDataRepository mRepository = CustomDataRepositoryImpl.getInstance();
-    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATUS = 1;
+    private final SplashStyleRepository mStyleRepo = SplashStyleRepositoryImpl.getInstance();
+    private final UserRepository mUserRepo = UserRepositoryImpl.getInstance();
+    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATUS = 101;
     private boolean handlerFlag = false;
 
     @BindView(R.id.splash_activity_layout)
@@ -56,6 +64,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        runMainScrees();
         handlerFlag = false;
     }
 
@@ -64,9 +73,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        if (InternetAccess.isOnLine(this) && mRepository.getCustomerName().equals("")) {
-            new CustomerAsyncTask().execute();
-        }
+        startService(new Intent(this, TimeService.class));
         loadCustomDesign();
         mSkipCounter.setVisibility(View.INVISIBLE);
         if (mRepository.getIMEI().equals("")) {
@@ -81,24 +88,46 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        loadDataAsyncTask();
+
+    }
+
+    private void loadDataAsyncTask() {
+        if (!mRepository.getIMEI().equals("")) {
+            if (mUserRepo.getAllUsers().size() == 0) {
+                new UserAsyncTask(false, null, null, null).execute();
+            }
+            if (InternetAccess.isOnLine(this)
+                    && mRepository.getCustomerName().equals("")
+                    && mRepository.isCommercialLicence()) {
+                new CustomerAsyncTask().execute();
+            }
+
+        }
+    }
+
     private void loadCustomDesign() {
-        mCustomizedText.setText(mRepository.getSplashScreenCustomText());
-        mCustomizedText.setTextSize(mRepository.getSplashScreenCustomTextSize());
-        mCustomizedText.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
-        if ((mRepository.getSplashScreenTextVisible() & 1) == 1) {
+        SplashActivity.this.getWindow().setStatusBarColor(Color.parseColor(mStyleRepo.getStatusBarColor()));
+        mCustomizedText.setText(mStyleRepo.getScreenCustomText());
+        mCustomizedText.setTextSize(mStyleRepo.getScreenCustomTextSize());
+        mCustomizedText.setTextColor(Color.parseColor(mStyleRepo.getTextColor()));
+        if ((mStyleRepo.getScreenTextVisible() & 1) == 1) {
             mCustomizedText.setVisibility(View.VISIBLE);
         } else {
             mCustomizedText.setVisibility(View.GONE);
         }
-        mThanksText.setText(mRepository.getSplashScreenThanksText());
-        mThanksText.setTextSize(mRepository.getSplashScreenThanksTextSize());
-        mThanksText.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
-        if ((mRepository.getSplashScreenTextVisible() & 2) == 2) {
+        mThanksText.setText(mStyleRepo.getScreenThanksText());
+        mThanksText.setTextSize(mStyleRepo.getScreenThanksTextSize());
+        mThanksText.setTextColor(Color.parseColor(mStyleRepo.getTextColor()));
+        if ((mStyleRepo.getScreenTextVisible() & 2) == 2) {
             mThanksText.setVisibility(View.VISIBLE);
         } else {
             mThanksText.setVisibility(View.GONE);
         }
-        if ((mRepository.getSplashScreenTextVisible() & 4) == 4) {
+        if ((mStyleRepo.getScreenTextVisible() & 4) == 4) {
             mSkipCounter.setVisibility(View.VISIBLE);
         } else {
             mSkipCounter.setVisibility(View.GONE);
@@ -106,16 +135,19 @@ public class SplashActivity extends AppCompatActivity {
         if (!mRepository.getLogo().equals("")) {
             mLogo.setImageBitmap(ImageBitmap.decodeImageFromStringToBitmap(mRepository.getLogo()));
         }
-        mSkipCounter.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
-        mAuthor.setTextColor(Color.parseColor(mRepository.getSplashTextColor()));
-        mLayout.setBackgroundColor(Color.parseColor(mRepository.getSplashLayoutColor()));
+        if (!mStyleRepo.getTextColor().equals("")) {
+            mSkipCounter.setTextColor(Color.parseColor(mStyleRepo.getTextColor()));
+            mAuthor.setTextColor(Color.parseColor(mStyleRepo.getTextColor()));
+        }
+        if (!mStyleRepo.getLayoutColor().equals(""))
+            mLayout.setBackgroundColor(Color.parseColor(mStyleRepo.getLayoutColor()));
     }
 
     private void runMainScrees() {
-        new CountDownTimer(mRepository.getSplashScreenTime() * 1000, 1000) {
+        new CountDownTimer(mStyleRepo.getScreenTime() * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                if ((mRepository.getSplashScreenTextVisible() & 4) == 4) {
+                if ((mStyleRepo.getScreenTextVisible() & 4) == 4) {
                     mSkipCounter.setVisibility(View.VISIBLE);
                 }
                 mSkipCounter.setText(getString(R.string.splash_activity_counter_text, millisUntilFinished / 1000));
@@ -131,6 +163,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void navigateToLoginScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -140,11 +173,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void askPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSIONS_REQUEST_READ_PHONE_STATUS);
-        } else {
-            saveImeiInSharedPreference();
-        }
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSIONS_REQUEST_READ_PHONE_STATUS);
+
     }
 
     @Override
@@ -154,6 +185,7 @@ public class SplashActivity extends AppCompatActivity {
             case PERMISSIONS_REQUEST_READ_PHONE_STATUS:
                 if (grantResult.length > 0 && grantResult[0] == PackageManager.PERMISSION_GRANTED) {
                     saveImeiInSharedPreference();
+                    loadDataAsyncTask();
                     runMainScrees();
                 } else {
                     showAlertDialogReadStatusPhonePermissionDenied();

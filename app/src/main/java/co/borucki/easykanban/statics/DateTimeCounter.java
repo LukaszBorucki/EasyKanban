@@ -1,13 +1,8 @@
 package co.borucki.easykanban.statics;
 
-
-import android.os.Build;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,8 +27,8 @@ public class DateTimeCounter {
 
     public static String dateOrTime(String date) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date dateToReturn = new Date();
 
 
@@ -50,27 +45,7 @@ public class DateTimeCounter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-    return "";
-
-//        return String.valueOf(time);
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//
-//        String formatCurrentDate = dateFormat.format(new Date());
-//        String formatMessageDate = "";
-//        String formatMessageTime = "";
-
-//        try {
-//            formatMessageDate = dateFormat.format(dateFormat.parse(date));
-//            formatMessageTime = timeFormat.format(timeFormat.parse(date));
-//        } catch (ParseException e) {
-//        }
-//
-//        if(formatCurrentDate.equals(formatMessageDate)){
-//            return formatMessageTime;
-//        }
-//        return formatMessageDate;
-
-//        return "";
+        return "";
     }
 
 }

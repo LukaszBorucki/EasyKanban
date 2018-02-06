@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/bar_code_layout"
     android:layout_height="match_parent">
 
     <SurfaceView
@@ -8,4 +9,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp" />
+    <ImageView
+        android:id="@+id/bar_code_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/custom_logo"
+        android:src="@drawable/splash_logo" />
+    <TextView
+        android:id="@+id/bar_code_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:text="@string/application_author" />
 </RelativeLayout>

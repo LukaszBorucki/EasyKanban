@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 
 
 public class Device {
-    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATUS = 1;
-
     public static String getDeviceID(Activity activity) {
         TelephonyManager telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
 

@@ -16,9 +16,9 @@ public class CustomerAsyncTask extends AsyncTask<Void, Void, CustomerDTO> {
 
     @Override
     protected CustomerDTO doInBackground(Void... voids) {
+        String id = mCustomRepo.isCommercialLicence() ? String.valueOf(mCustomRepo.getIMEI()) : "demo";
+        String link = "http://www.borucki.co/api_v2/kanban/getCustomerData?id=" + id;
 
-        String link = "http://www.borucki.co/api_v2/kanban/getCustomerData?id="
-                + mCustomRepo.getIMEI();
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());

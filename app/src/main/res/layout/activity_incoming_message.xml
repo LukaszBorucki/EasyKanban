@@ -3,9 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/incoming_message_activity_layout"
     android:orientation="vertical"
     tools:context="co.borucki.easykanban.view.IncomingMessageActivity">
-
+    <ImageView
+        android:id="@+id/incoming_message_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/custom_logo"
+        android:src="@drawable/splash_logo" />
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_margin="16dp"
         android:id="@+id/incoming_message_swipe_refresh"

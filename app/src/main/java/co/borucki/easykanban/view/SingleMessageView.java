@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -17,6 +20,7 @@ import co.borucki.easykanban.repository.EventLogRepository;
 import co.borucki.easykanban.repository.EventLogRepositoryImpl;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
+import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DateTimeCounter;
 
 public class SingleMessageView extends AppCompatActivity {
@@ -29,7 +33,6 @@ public class SingleMessageView extends AppCompatActivity {
     private Handler handler;
     private boolean changedReadMessageStatus = false;
 
-
     @BindView(R.id.single_message_from)
     TextView mFrom;
     @BindView(R.id.single_message_subject)
@@ -38,6 +41,12 @@ public class SingleMessageView extends AppCompatActivity {
     TextView mText;
     @BindView(R.id.single_message_author)
     TextView mAuthor;
+    @BindView(R.id.single_message_logo)
+    ImageView mLogo;
+    @BindView(R.id.delete_message)
+    Button mDeleteButton;
+    @BindView(R.id.single_message_view)
+    RelativeLayout mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,7 @@ public class SingleMessageView extends AppCompatActivity {
         userId = intent.getLongExtra("USER_ID", -1);
         messageId = intent.getLongExtra("MESSAGE_ID", -1);
         message = mMessageRepo.getMessageById(messageId);
+        CustomLayoutViewSetup.setSingleMessageView(mLayout, mLogo, mFrom, mSubject, mText, mAuthor, mDeleteButton, this);
         mFrom.setText(message.getFrom());
         mSubject.setText(message.getSubject());
         mText.setText(message.getContents());

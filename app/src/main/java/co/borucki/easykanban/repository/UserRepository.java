@@ -16,4 +16,6 @@ public interface UserRepository {
     void updateUser(List<User> users);
 
     List<User> getAllUsers();
+
+    void removeAll();
 }

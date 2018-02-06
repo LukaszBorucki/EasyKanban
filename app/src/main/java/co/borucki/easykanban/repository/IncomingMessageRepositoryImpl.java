@@ -43,4 +43,13 @@ public class IncomingMessageRepositoryImpl implements IncomingMessageRepository 
         return mDatabase.countUnreadMessages();
     }
 
+    @Override
+    public long getLastMessageId() {
+        return mDatabase.getLastMessageId();
+    }
+
+    @Override
+    public void removeAll() {
+        mDatabase.removeAllIncomingMessage();
+    }
 }

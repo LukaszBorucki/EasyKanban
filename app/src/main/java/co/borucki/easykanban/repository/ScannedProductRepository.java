@@ -14,4 +14,6 @@ public interface ScannedProductRepository {
     void delete(ScannedProduct scannedProduct);
 
     void delete(List<ScannedProduct> scannedProducts);
+
+    void removeAll();
 }

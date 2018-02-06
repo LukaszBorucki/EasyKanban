@@ -99,4 +99,9 @@ public class User {
     public void setPossibleLoginTry(int possibleLoginTry) {
         this.possibleLoginTry = possibleLoginTry;
     }
+
+    @Override
+    public String toString() {
+        return name + " " + surname;
+    }
 }
