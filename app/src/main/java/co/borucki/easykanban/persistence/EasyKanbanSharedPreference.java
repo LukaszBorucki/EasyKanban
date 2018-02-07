@@ -3,6 +3,7 @@ package co.borucki.easykanban.persistence;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import co.borucki.easykanban.statics.SharedPrefService;
 
 public class EasyKanbanSharedPreference {
@@ -17,6 +18,9 @@ public class EasyKanbanSharedPreference {
     private static final String CUSTOMER_MAIL_RECEIVER_LIST = "Customer receiver lists";
     private static final String LICENCE_TYPE = "application licence type";
     private static final String ACCEPTABLE_CODE_TYPE = "acceptable code type";
+    private static final String LOGIN_TIME_STAMP = "time from last login";
+    private static final String SEND_LOGS = "send app logs by mail";
+    private static final String LICENCE_OWNER = "licence owner";
     private final SharedPreferences mSharedPreferences;
     private Context context;
 
@@ -103,5 +107,29 @@ public class EasyKanbanSharedPreference {
 
     public int getCodeType() {
         return mSharedPreferences.getInt(ACCEPTABLE_CODE_TYPE, 256);
+    }
+
+    public void setLoginTimestamp(String timestamp) {
+        SharedPrefService.setSharedPreferences(mSharedPreferences, LOGIN_TIME_STAMP, timestamp, "String");
+    }
+
+    public String getLoginTimestamp() {
+        return SharedPrefService.getSharedPreferencesString(mSharedPreferences, LOGIN_TIME_STAMP, "2017/11/10 10:00:00");
+    }
+
+    public void setSendLog(boolean sendLog) {
+        SharedPrefService.setSharedPreferences(mSharedPreferences, SEND_LOGS, sendLog, "boolean");
+    }
+
+    public boolean isSendLog() {
+        return mSharedPreferences.getBoolean(SEND_LOGS, false);
+    }
+
+    public void setLicenceOwner(String licenceOwner) {
+        SharedPrefService.setSharedPreferences(mSharedPreferences,LICENCE_OWNER,licenceOwner,"String");
+    }
+
+    public String getLicenceOwner() {
+        return SharedPrefService.getSharedPreferencesString(mSharedPreferences,LICENCE_OWNER,"No license to use this application");
     }
 }

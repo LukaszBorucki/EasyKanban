@@ -1,7 +1,11 @@
 package co.borucki.easykanban;
 
+import android.content.Context;
+
+import java.io.File;
 import java.util.Date;
 import java.util.Properties;
+
 import javax.activation.CommandMap;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -112,12 +116,11 @@ public class Mail extends javax.mail.Authenticator {
         }
     }
 
-    public void addAttachment(String filename) throws Exception {
+    public void addAttachment(String filenameWithPath, String filename) throws Exception {
         BodyPart messageBodyPart = new MimeBodyPart();
-        DataSource source = new FileDataSource(filename);
+        DataSource source = new FileDataSource(filenameWithPath);
         messageBodyPart.setDataHandler(new DataHandler(source));
         messageBodyPart.setFileName(filename);
-
         _multipart.addBodyPart(messageBodyPart);
     }
 

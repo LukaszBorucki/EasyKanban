@@ -22,6 +22,7 @@ import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DateTimeCounter;
+import co.borucki.easykanban.statics.Session;
 
 public class SingleMessageView extends AppCompatActivity {
     private final IncomingMessageRepository mMessageRepo = IncomingMessageRepositoryImpl.getInstance();
@@ -53,6 +54,7 @@ public class SingleMessageView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_message_view);
         ButterKnife.bind(this);
+        Session.checkIfSessionIsActive(this);
         Intent intent = getIntent();
         userId = intent.getLongExtra("USER_ID", -1);
         messageId = intent.getLongExtra("MESSAGE_ID", -1);
@@ -108,6 +110,7 @@ public class SingleMessageView extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Session.checkIfSessionIsActive(this);
         handler.postDelayed(runnable, 3000);
     }
 
@@ -135,4 +138,12 @@ public class SingleMessageView extends AppCompatActivity {
                         , "MESSAGE"));
         finish();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Session.checkIfSessionIsActive(this);
+    }
+
+
 }

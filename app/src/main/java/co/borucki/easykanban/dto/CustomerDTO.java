@@ -7,17 +7,19 @@ public class CustomerDTO {
     private String mailHost;
     private int mailSMTPPort;
     private String mailTo;
+    private String licenceOwner;
 
     public CustomerDTO() {
     }
 
-    public CustomerDTO(String name, String mailAddress, String mailPassword, String mailHost, int mailSMTPPort, String mailTo) {
+    public CustomerDTO(String name, String mailAddress, String mailPassword, String mailHost, int mailSMTPPort, String mailTo, String licenceOwner) {
         this.name = name;
         this.mailAddress = mailAddress;
         this.mailPassword = mailPassword;
         this.mailHost = mailHost;
         this.mailSMTPPort = mailSMTPPort;
         this.mailTo = mailTo;
+        this.licenceOwner = licenceOwner;
     }
 
     public String getName() {
@@ -66,5 +68,13 @@ public class CustomerDTO {
 
     public void setMailTo(String mailTo) {
         this.mailTo = mailTo;
+    }
+
+    public String getLicenceOwner() {
+        return licenceOwner;
+    }
+
+    public void setLicenceOwner(String licenceOwner) {
+        this.licenceOwner = licenceOwner;
     }
 }

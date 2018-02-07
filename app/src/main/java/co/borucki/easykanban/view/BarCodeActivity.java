@@ -22,6 +22,7 @@ import co.borucki.easykanban.R;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
+import co.borucki.easykanban.statics.Session;
 
 public class BarCodeActivity extends Activity {
     private final CustomDataRepository mRepo = CustomDataRepositoryImpl.getInstance();
@@ -34,6 +35,7 @@ public class BarCodeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_code);
+        Session.checkIfSessionIsActive(this);
         CustomLayoutViewSetup.setBarCodeActivity(this);
         cameraView = findViewById(R.id.cameraView);
         cameraView.setZOrderMediaOverlay(true);
@@ -98,5 +100,16 @@ public class BarCodeActivity extends Activity {
                 }
             }
         });
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Session.checkIfSessionIsActive(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Session.checkIfSessionIsActive(this);
     }
 }

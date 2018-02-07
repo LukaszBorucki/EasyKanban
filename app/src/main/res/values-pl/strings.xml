@@ -1,0 +1,91 @@
+<resources>
+    <string name="application_author">© Łukasz Borucki</string>
+    <string name="app_name">EasyKanban</string>
+
+    <string name="splash_activity_customized_text">\tAplikacja EasyKanban system.\nMożesz skanować kody QR lub kreskowe zużytch produktów i wysłać listę do dostawcy.\n\tWięcej informacji o funkcjach aplikacji możesz znaleźć na www.borucki.co/easy_kanban_app</string>
+    <string name="splash_activity_thanks_text">\tMożesz dostosować wygląd aplikacji do własnych preferencji (zmiana loga, tekstu na ekranie powitalnym, czas wyświetlenia ekranu powitalnego).\nDziękuję za użycie aplikacji Easy Kanban</string>
+    <string name="splash_activity_counter_text">pomiń za: %d s</string>
+    <string name="splash_activity_logo_content_description">Logo firmowe</string>
+    <string name="splash_activity_permission_warning">Uwaga</string>
+    <string name="splash_activity_permission_alert_message">Aplikacji Easy Kanban musi mieć dostęp do statusu urządzenia aby odczytać jego ID dla identyfikacji w API. Jeżeli odmówisz dostępu, aplikacja zostanie zamknięta.</string>
+    <string name="splash_activity_permission_alert_positive_action">Spróbuj ponownie</string>
+    <string name="splash_activity_permission_alert_negative_action">Zamknij aplikację</string>
+    <string name="login_activity_error_acount_temporarily_blocked">Twoje konto jest zablokowane. Zostanie automatycznie odblokowane po %1d min %2d sek</string>
+
+    <string name="title_activity_login">Logowanie</string>
+    <string name="login_activity_alert_dialog_title">Błąd</string>
+    <string name="login_activity_alert_dialog_message">Hasło jest nieprawidłowe.\nSpróbuj ponownie.\n\nPozostało %d prób, póżniej konto zostanie zablokowane</string>
+    <string name="login_activity_alert_dialog_message_account_blocked">Hasło nieprawidłowe.\nPodałeś błędne hasło 10 razy. Konto zostało zablokowane na 15 min</string>
+    <string name="login_activity_alert_dialog_positive_button_text">OK</string>
+    <string name="login_activity_alert_dialog_negative_button_text">Wyjście</string>
+    <string name="login_activity_error_user_is_blocked">Użytkownik /1%s 2%s/ jest zablokowany. Proszę skontaktować się z dostawcą.></string>
+    <string name="login_activity_menu_add_users">Pobieranie danych</string>
+    <string name="login_activity_tool_bar_title">Login</string>
+    <string name="login_activity_no_users_loaded">Brak dostępnych użytkowników. Proszę pobrać użytkoników za pomocą menu.</string>
+    <string name="custom_logo">Logo firmowe</string>
+
+    <string name="main_activity_button_1">Produkty zużyte</string>
+    <string name="main_activity_button_2">Dostawa</string>
+    <string name="main_activity_button_3">Wiadomości</string>
+    <string name="main_activity_button_4">Inwentaryzacja</string>
+    <string name="button_text">text</string>
+    <string name="incoming_message_subject">Temat</string>
+
+    <string name="single_message_from">Od:</string>
+    <string name="single_message_delete_button_text">Skasuj wiadomość</string>
+
+    <string name="scanned_product_send_used_list">Wyślij listę zużytych produktów</string>
+    <string name="scanned_product_send_delivered_list">Wyślij listę dostarczonych produktów</string>
+    <string name="scanned_product_send_stocktaking_list">Wyślij listę inwentaryzacyjną</string>
+    <string name="scanned_product_tool_bar_title_stocktaking">Inwentaryzacja</string>
+    <string name="scanned_product_tool_bar_title_delivered_product">Dostarczone produkty</string>
+    <string name="scanned_product_tool_bar_title_used_product">Zużyte produkty</string>
+    <string name="scanned_product_single_row_trash">kosz zdjęcie</string>
+    <string name="scanned_product_adapter_date_time">Zeskanowano o: %s</string>
+    <string name="scanned_product_not_exist_alert_title">Uwaga!</string>
+    <string name="scanned_product_not_exist_alert_message"><![CDATA[Produkt >> %s << nie został odnaleziony w bazie danych. Proszę odświeżyć bazę produktów i spróbować ponownie.]]></string>
+    <string name="scanned_product_position_rack">Regał nr: %d</string>
+    <string name="scanned_product_position_rack_shelf">Pólka nr: %d</string>
+    <string name="scanned_product_position_rack_shelf_row">Rząd nr: %d</string>
+    <string name="scanned_product_position">Produkt znajduje się na:</string>
+    <string name="scanned_product_dialog_title">Potwierdź zeskanowany produkt</string>
+    <string name="scanned_product_dialog_positive_button">Potwierdzam</string>
+    <string name="scanned_product_dialog_negative_button">Anuluj</string>
+    <string name="scanned_product_confirmation_image">zdjęci produktu</string>
+
+    <string name="dialog_delete_scanned_product_title">UWAGA!</string>
+    <string name="dialog_delete_scanned_product_positive_button_title">Tak</string>
+    <string name="dialog_delete_scanned_product_negative_button_title">Anulij</string>
+    <string name="dialog_delete_scanned_product_message">Próbujesz skasować zeskanowany produkt nr: %s \nTa operacja jest nieodwracalna. Czy na pewno chcesz skasować ten produkt?</string>
+
+    <string name="info_menu_logged_load_products">Pobierz rodukty</string>
+    <string name="info_menu_main_change_password">Zmień hasło</string>
+    <string name="demo_version_title">Informacja</string>
+    <string name="demo_version_message">Aplikacja działa w wersji DEMO, więc nie można wysyłać listy zeskanowanych produktów. \nPo wersję komercyjną zapraszam na http://www.borucki.co/easy_kanban_app</string>
+    <string name="bar_code_detector_error">Przepraszam nie mogłem skonfigurować kamery</string>
+    <string name="main_button_used_product">Zużuty produkt</string>
+    <string name="main_button_received_product">Dostarczony produkt</string>
+    <string name="main_button_incoming_message">Wiadomości przychodzące</string>
+    <string name="main_button_stocktaking">Inwentaryzacja</string>
+    <string name="change_password_positive_buton">Zmień</string>
+    <string name="change_password_negative_button">Anuluj</string>
+    <string name="change_password_changed">Hasło zmienione</string>
+    <string name="change_password_to_short">Hasło musi mieć 4 cyfry</string>
+    <string name="change_password_incorrect_old">Stare hasło jest nieprawidłowe</string>
+    <string name="change_password_different">Nowe hasło i jego potwierdzenie są różne</string>
+    <string name="change_password_dialog_title">Zmiana hasła - %1s %2s</string>
+    <string name="change_password_layout_old">Stare hasło</string>
+    <string name="change_password_layout_new">Nowe hasło</string>
+    <string name="change_password_layout_repeat">Potwierź nowe hasło</string>
+    <string name="product_id_and_description">%1s %2s</string>
+    <string name="pdf_send_by">Wysłane przez: %1s %2s</string>
+    <string name="pdf_no">Lp.</string>
+    <string name="pdf_product_id">Symbol</string>
+    <string name="pdf_description">Opis</string>
+    <string name="pdf_quantity">Ilość</string>
+    <string name="pdf_scan_time">Zeskanowano o:</string>
+    <string name="pdf_used_product">%s - Lista zużytych produktów</string>
+    <string name="pdf_received_product">%s - Lista dostarczonych produktów</string>
+    <string name="pdf_stocktaking">%s - Lista inwentaryzacyjna</string>
+    <string name="pdf_footer">Aplikacja EasyKanban  - © Łukasz Borucki | Licencja komercyjna dla: %s</string>
+</resources>

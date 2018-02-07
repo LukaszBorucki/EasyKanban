@@ -115,4 +115,34 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
     public int getCodeType() {
         return mSharedPref.getCodeType();
     }
+
+    @Override
+    public void setLoginTimestamp(String timestamp) {
+        mSharedPref.setLoginTimestamp(timestamp);
+    }
+
+    @Override
+    public String getLoginTimestamp() {
+        return mSharedPref.getLoginTimestamp();
+    }
+
+    @Override
+    public void setSendLog(boolean sendLog) {
+        mSharedPref.setSendLog(sendLog);
+    }
+
+    @Override
+    public boolean isSendLog() {
+        return mSharedPref.isSendLog();
+    }
+
+    @Override
+    public void setLicenceOwner(String licenceOwner) {
+        mSharedPref.setLicenceOwner(licenceOwner);
+    }
+
+    @Override
+    public String getLicenceOwner() {
+        return mSharedPref.getLicenceOwner();
+    }
 }

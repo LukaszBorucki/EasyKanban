@@ -31,6 +31,8 @@ import butterknife.ButterKnife;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.asyncTask.UserAsyncTask;
 import co.borucki.easykanban.model.User;
+import co.borucki.easykanban.repository.CustomDataRepository;
+import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.repository.style.LoginStyleRepository;
@@ -41,6 +43,7 @@ import co.borucki.easykanban.statics.DateTimeCounter;
 public class LoginActivity extends AppCompatActivity {
     private LoginStyleRepository mLoginStyleRepo = LoginStyleRepositoryImpl.getInstance();
     private final UserRepository mUserRep = UserRepositoryImpl.getInstance();
+    private final CustomDataRepository mCustomRep = CustomDataRepositoryImpl.getInstance();
     private List<User> mUsers;
     private User user;
     private List<String> spinnerArray = new ArrayList<>();
@@ -285,6 +288,7 @@ public class LoginActivity extends AppCompatActivity {
             user.setPossibleLoginTry(10);
             user.setLastLogin(DateTimeCounter.getDateTime());
             mUserRep.updateUser(user);
+            mCustomRep.setLoginTimestamp(DateTimeCounter.getDateTime());
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("USER_ID", user.getId());
             startActivity(intent);

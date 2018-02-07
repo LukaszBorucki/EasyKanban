@@ -34,5 +34,6 @@ public class CustomerAsyncTask extends AsyncTask<Void, Void, CustomerDTO> {
         mCustomRepo.setMailHost(customer.getMailHost());
         mCustomRepo.setMailSMTPPort(customer.getMailSMTPPort());
         mCustomRepo.setMailTo(customer.getMailTo());
+        mCustomRepo.setLicenceOwner(customer.getLicenceOwner());
     }
 }

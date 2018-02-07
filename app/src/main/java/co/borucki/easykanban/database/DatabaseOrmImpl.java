@@ -243,6 +243,8 @@ public class DatabaseOrmImpl extends OrmLiteSqliteOpenHelper implements Database
     public void removeAllProduct() {
         mProductDao.delete(mProductDao.queryForAll());
     }
-    //<Product/>
+
+
+//<Product/>
 
 }

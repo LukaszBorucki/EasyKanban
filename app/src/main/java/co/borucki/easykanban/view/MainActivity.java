@@ -18,15 +18,27 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.borucki.easykanban.Mail;
 import co.borucki.easykanban.R;
+import co.borucki.easykanban.asyncTask.AppConfigurationConfirmAsyncTask;
+import co.borucki.easykanban.asyncTask.SendEmailAsyncTask;
+import co.borucki.easykanban.model.EventLog;
 import co.borucki.easykanban.model.ScannedType;
 import co.borucki.easykanban.model.User;
+import co.borucki.easykanban.repository.CustomDataRepository;
+import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
+import co.borucki.easykanban.repository.EventLogRepository;
+import co.borucki.easykanban.repository.EventLogRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
+import co.borucki.easykanban.statics.DateTimeCounter;
+import co.borucki.easykanban.statics.Session;
 
 public class MainActivity extends AppCompatActivity {
     private final UserRepository mUserRepo = UserRepositoryImpl.getInstance();
+    private final EventLogRepository mLogRepo = EventLogRepositoryImpl.getInstance();
+    private final CustomDataRepository mRepository = CustomDataRepositoryImpl.getInstance();
     @BindView(R.id.usedProductButton)
     RelativeLayout mUsedProductButton;
     @BindView(R.id.usedProductButtonText)
@@ -79,13 +91,22 @@ public class MainActivity extends AppCompatActivity {
         CustomLayoutViewSetup.setScannedBadge(mReceivedProductButtonBadge, ScannedType.RECEIVED.getType().toUpperCase());
         CustomLayoutViewSetup.setScannedBadge(mStocktakingProductButtonBadge, ScannedType.STOCKTAKING.getType().toUpperCase());
         setSupportActionBar(mToolBar);
+        Session.checkIfSessionIsActive(this);
+        sendAppLogs();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Session.checkIfSessionIsActive(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Session.checkIfSessionIsActive(this);
         setUpButtons();
+        sendAppLogs();
         setButtonOnClick();
         CustomLayoutViewSetup.setMainLayoutView(mToolBar, mLogo, mAuthor, mLayout, this);
         CustomLayoutViewSetup.setMessageBadge(mMessageButtonBadge);
@@ -160,11 +181,6 @@ public class MainActivity extends AppCompatActivity {
                         , (mUser.getPermissions() & 8) == 8);
     }
 
-    void startLoginIntent() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -216,5 +232,31 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.info_menu_main, menu);
         return true;
+    }
+
+    private void sendAppLogs() {
+        if (mRepository.isSendLog()) {
+            mRepository.setSendLog(false);
+            StringBuilder builder = new StringBuilder();
+            builder.append(DateTimeCounter.getDateTime());
+            builder.append("\n");
+            for (EventLog eventLog : mLogRepo.getAll()) {
+                builder.append(eventLog.toString());
+                builder.append("\n");
+            }
+            String[] recipients = mRepository.getMailTo().split(";");
+            SendEmailAsyncTask email = new SendEmailAsyncTask();
+            email.m = new Mail(mRepository.getMailAddress(), mRepository.getMailPassword());
+            email.m.set_from(mRepository.getMailAddress());
+            email.m.setBody(builder.toString());
+            email.m.set_to(recipients);
+            email.m.set_host(mRepository.getMailHost());
+            email.m.set_port(String.valueOf(mRepository.getMailSMTPPort()));
+            email.m.set_sport(String.valueOf(mRepository.getMailSMTPPort()));
+            email.m.set_subject("Log from device >>" + mRepository.getIMEI() + "<< Used by: >>" + mRepository.getCustomerName() + "<<");
+            email.execute();
+            mLogRepo.removeAll();
+            new AppConfigurationConfirmAsyncTask().execute("send_all");
+        }
     }
 }
