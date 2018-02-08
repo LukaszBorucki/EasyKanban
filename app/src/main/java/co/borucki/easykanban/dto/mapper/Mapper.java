@@ -43,7 +43,8 @@ public class Mapper {
                 , customerDTO.getMailPassword()
                 , customerDTO.getMailHost()
                 , customerDTO.getMailSMTPPort()
-                , customerDTO.getMailTo());
+                , customerDTO.getMailTo()
+                , customerDTO.getLicenceOwner());
     }
 
     public static Product fromProductDTOToProduct(ProductDTO productDTO) {

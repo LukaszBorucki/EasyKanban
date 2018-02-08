@@ -1,7 +1,6 @@
 package co.borucki.easykanban.repository;
 
 
-
 public interface CustomDataRepository {
     String getLogo();
 
@@ -43,4 +42,15 @@ public interface CustomDataRepository {
 
     int getCodeType();
 
+    void setLoginTimestamp(String timestamp);
+
+    String getLoginTimestamp();
+
+    void setSendLog(boolean sendLog);
+
+    boolean isSendLog();
+
+    void setLicenceOwner(String licenceOwner);
+
+    String getLicenceOwner();
 }

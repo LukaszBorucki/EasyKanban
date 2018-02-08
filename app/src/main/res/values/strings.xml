@@ -1,45 +1,45 @@
 <resources>
+    <string name="application_author">© Łukasz Borucki</string>
     <string name="app_name">EasyKanban</string>
+
     <string name="splash_activity_customized_text">\tIt is an easy Kanban system app.\nYou can scan QR codes of used product and send this information to your supplier.  \tMore information about application functions you can find at www.borucki.co/easy_kanban_app</string>
     <string name="splash_activity_thanks_text">\tYou can customize this screen (change logo, text and display time).\nThanks for using Easy Kanban App</string>
     <string name="splash_activity_counter_text">skip for: %d s</string>
-    <string name="application_author">© Łukasz Borucki</string>
-    <string name="title_activity_login">Sign in</string>
-
     <string name="splash_activity_logo_content_description">Logo of your customer</string>
-    <string name="login_activity_alert_dialog_title">Error</string>
-    <string name="login_activity_alert_dialog_message">Password is incorrect.\nPlease try again.\n\nyou have %d attempts left, then your account will be blocked</string>
-    <string name="login_activity_alert_dialog_message_account_blocked">Password is incorrect.\nYou have typed incorrect password 10 times. Your account is blocked for 15 min</string>
-    <string name="login_activity_alert_dialog_positive_button_text">OK</string>
-    <string name="login_activity_alert_dialog_negative_button_text">Exit</string>
     <string name="splash_activity_permission_warning">Warning</string>
     <string name="splash_activity_permission_alert_message">Easy Kanban app need read phone status to identification devices in supplier system. If you deny permission, application will be closed.</string>
     <string name="splash_activity_permission_alert_positive_action">Try again</string>
     <string name="splash_activity_permission_alert_negative_action">Close app</string>
     <string name="login_activity_error_acount_temporarily_blocked">Your account is blocked. It will be automatically unlocked for %1d min %2d sek</string>
+
+    <string name="title_activity_login">Sign in</string>
+    <string name="login_activity_alert_dialog_title">Error</string>
+    <string name="login_activity_alert_dialog_message">Password is incorrect.\nPlease try again.\n\nyou have %d attempts left, then your account will be blocked</string>
+    <string name="login_activity_alert_dialog_message_account_blocked">Password is incorrect.\nYou have typed incorrect password 10 times. Your account is blocked for 15 min</string>
+    <string name="login_activity_alert_dialog_positive_button_text">OK</string>
+    <string name="login_activity_alert_dialog_negative_button_text">Exit</string>
     <string name="login_activity_error_user_is_blocked">User /1%s 2%s/ is blocked. Please contact with supplier administrator.></string>
     <string name="login_activity_menu_add_users">Load data</string>
     <string name="login_activity_tool_bar_title">Login</string>
     <string name="login_activity_no_users_loaded">No user available. Please use load data from menu.</string>
     <string name="custom_logo">Company logotype</string>
+
     <string name="main_activity_button_1">scan used product</string>
     <string name="main_activity_button_2">scan delivered product</string>
     <string name="main_activity_button_3">incoming message</string>
     <string name="main_activity_button_4">stocktaking</string>
     <string name="button_text">text</string>
     <string name="incoming_message_subject">Subject</string>
+
     <string name="single_message_from">From:</string>
     <string name="single_message_delete_button_text">Delete a message</string>
+
     <string name="scanned_product_send_used_list">Send used product list</string>
     <string name="scanned_product_send_delivered_list">Send delivered product list</string>
     <string name="scanned_product_send_stocktaking_list">Send stocktaking list</string>
     <string name="scanned_product_tool_bar_title_stocktaking">Stocktaking</string>
     <string name="scanned_product_tool_bar_title_delivered_product">Received product</string>
     <string name="scanned_product_tool_bar_title_used_product">Used product</string>
-    <string name="dialog_delete_scanned_product_title">Attention!</string>
-    <string name="dialog_delete_scanned_product_positive_button_title">Yes</string>
-    <string name="dialog_delete_scanned_product_negative_buttontitle">Cancel</string>
-    <string name="dialog_delete_scanned_product_message">You try delete scanned product No: %s \nThis operation is irreversible. You really want to delete this product?</string>
     <string name="scanned_product_single_row_trash">trash_image</string>
     <string name="scanned_product_adapter_date_time">Scanned on: %s</string>
     <string name="scanned_product_not_exist_alert_title">Attention!</string>
@@ -52,6 +52,12 @@
     <string name="scanned_product_dialog_positive_button">Confirm</string>
     <string name="scanned_product_dialog_negative_button">Cancel</string>
     <string name="scanned_product_confirmation_image">photo_of_product</string>
+
+    <string name="dialog_delete_scanned_product_title">Attention!</string>
+    <string name="dialog_delete_scanned_product_positive_button_title">Yes</string>
+    <string name="dialog_delete_scanned_product_negative_button_title">Cancel</string>
+    <string name="dialog_delete_scanned_product_message">You try delete scanned product No: %s \nThis operation is irreversible. You really want to delete this product?</string>
+
     <string name="info_menu_logged_load_products">Load products</string>
     <string name="info_menu_main_change_password">Change password</string>
     <string name="demo_version_title">Information</string>
@@ -72,4 +78,19 @@
     <string name="change_password_layout_new">New password</string>
     <string name="change_password_layout_repeat">Confirm password</string>
     <string name="product_id_and_description">%1s %2s</string>
+    <string name="pdf_send_by">send by: %1s %2s</string>
+    <string name="pdf_no">No.</string>
+    <string name="pdf_product_id">Product_Id</string>
+    <string name="pdf_description">Description</string>
+    <string name="pdf_quantity">Quantity</string>
+    <string name="pdf_scan_time">Scan time</string>
+    <string name="pdf_used_product">%s - Used product list</string>
+    <string name="pdf_received_product">%s - Delivered product list</string>
+    <string name="pdf_stocktaking">%s - Stocktaking list</string>
+    <string name="pdf_footer">EasyKanban app - © Łukasz Borucki | Commercial licence for: %s</string>
+    <string name="csv_product_code">Product_Id</string>
+    <string name="csv_product_quantity">Quantity</string>
+    <string name="csv_product_unit">Unit</string>
+    <string name="csv_product_description">Description</string>
+    <string name="csv_scan_timestamp">Scanned on:</string>
 </resources>

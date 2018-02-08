@@ -57,30 +57,12 @@ public class AppConfigurationAsyncTask extends AsyncTask<Void, Void, AppConfigur
         }
 
         if (configuration.isRefreshStyle()) {
+            new CustomerAsyncTask().execute();
             new CustomStyleAsyncTask(true).execute();
         }
 
         if (configuration.isSendLog()) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(DateTimeCounter.getDateTime());
-            builder.append("\n");
-            for (EventLog eventLog : mLogRepo.getAll()) {
-                builder.append(eventLog.toString());
-                builder.append("\n");
-            }
-            String[] recipients = mCustomRepo.getMailTo().split(";");
-            SendEmailAsyncTask email = new SendEmailAsyncTask();
-            email.m = new Mail(mCustomRepo.getMailAddress(), mCustomRepo.getMailPassword());
-            email.m.set_from(mCustomRepo.getMailAddress());
-            email.m.setBody(builder.toString());
-            email.m.set_to(recipients);
-            email.m.set_host(mCustomRepo.getMailHost());
-            email.m.set_port(String.valueOf(mCustomRepo.getMailSMTPPort()));
-            email.m.set_sport(String.valueOf(mCustomRepo.getMailSMTPPort()));
-            email.m.set_subject("Log from device >>"+mCustomRepo.getIMEI()+"<< Used by: >>"+mCustomRepo.getCustomerName()+"<<");
-            email.execute();
-            mLogRepo.removeAll();
-            new AppConfigurationConfirmAsyncTask().execute("send_all");
+            mCustomRepo.setSendLog(true);
         }
     }
 }

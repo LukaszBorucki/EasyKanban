@@ -19,6 +19,7 @@ import co.borucki.easykanban.model.IncomingMessage;
 import co.borucki.easykanban.repository.IncomingMessageRepository;
 import co.borucki.easykanban.repository.IncomingMessageRepositoryImpl;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
+import co.borucki.easykanban.statics.Session;
 
 public class IncomingMessageActivity extends AppCompatActivity {
     private IncomingMessageRepository mMessageRepo = IncomingMessageRepositoryImpl.getInstance();
@@ -34,6 +35,7 @@ public class IncomingMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_message);
         ButterKnife.bind(this);
+        Session.checkIfSessionIsActive(this);
         Intent intent = getIntent();
         userId = intent.getLongExtra("USER_ID", 0);
         CustomLayoutViewSetup.setIncomingMessageView(this);
@@ -57,7 +59,13 @@ public class IncomingMessageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Session.checkIfSessionIsActive(this);
         refreshData();
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Session.checkIfSessionIsActive(this);
     }
 
     private final View.OnClickListener mOnClickListener =

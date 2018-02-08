@@ -1,6 +1,9 @@
 package co.borucki.easykanban.view;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,11 +29,13 @@ import co.borucki.easykanban.asyncTask.CustomerAsyncTask;
 import co.borucki.easykanban.asyncTask.UserAsyncTask;
 import co.borucki.easykanban.repository.CustomDataRepository;
 import co.borucki.easykanban.repository.CustomDataRepositoryImpl;
+import co.borucki.easykanban.repository.EventLogRepository;
+import co.borucki.easykanban.repository.EventLogRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
 import co.borucki.easykanban.repository.style.SplashStyleRepository;
 import co.borucki.easykanban.repository.style.SplashStyleRepositoryImpl;
-import co.borucki.easykanban.service.TimeService;
+import co.borucki.easykanban.service.MyReceiver;
 import co.borucki.easykanban.statics.Device;
 import co.borucki.easykanban.statics.ImageBitmap;
 import co.borucki.easykanban.statics.InternetAccess;
@@ -73,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        startService(new Intent(this, TimeService.class));
+        scheduleAlarm();
         loadCustomDesign();
         mSkipCounter.setVisibility(View.INVISIBLE);
         if (mRepository.getIMEI().equals("")) {
@@ -86,6 +91,16 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             runMainScrees();
         }
+    }
+
+    private void scheduleAlarm() {
+        Intent intent = new Intent(getApplicationContext(), MyReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, MyReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long firstMillis = System.currentTimeMillis();
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, pIntent);
     }
 
     @Override

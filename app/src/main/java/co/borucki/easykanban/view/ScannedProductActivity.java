@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.vision.barcode.Barcode;
 
+import java.io.File;
 import java.util.List;
 
 import javax.mail.AuthenticationFailedException;
@@ -61,10 +63,13 @@ import co.borucki.easykanban.repository.ScannedProductRepository;
 import co.borucki.easykanban.repository.ScannedProductRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
+import co.borucki.easykanban.statics.Csv;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DateTimeCounter;
 import co.borucki.easykanban.statics.ImageBitmap;
 import co.borucki.easykanban.statics.InternetAccess;
+import co.borucki.easykanban.statics.Pdf;
+import co.borucki.easykanban.statics.Session;
 
 public class ScannedProductActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 101;
@@ -97,12 +102,14 @@ public class ScannedProductActivity extends AppCompatActivity {
     FloatingActionButton mFAB;
     private boolean isSent;
     private StringBuilder stringBuilder;
+    private String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanned_product);
         ButterKnife.bind(this);
+        Session.checkIfSessionIsActive(this);
         Intent intent = getIntent();
         list_type = ScannedType.valueOf(intent.getStringExtra("LIST_TYPE").toUpperCase());
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -160,7 +167,7 @@ public class ScannedProductActivity extends AppCompatActivity {
                     refreshData();
                 }
             });
-            builder.setNegativeButton(R.string.dialog_delete_scanned_product_negative_buttontitle, new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(R.string.dialog_delete_scanned_product_negative_button_title, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -250,7 +257,9 @@ public class ScannedProductActivity extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     });
-                    builder.create().show();
+                    if (Session.checkIfSessionIsActive(this)) {
+                        builder.create().show();
+                    }
 
                 }
 
@@ -297,13 +306,34 @@ public class ScannedProductActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
+        fileName = DateTimeCounter.getDateTime()
+                .replace(" ", "_")
+                .replace("/", "")
+                .replace(":", "")
+                + "_"
+                + mCustomRepo.getCustomerName()
+                + "_"
+                + list_type.getType().toUpperCase();
 
+        Pdf.createPdf(this, this, fileName, list_type.getType().toUpperCase(), mUser);
+        Csv.createFile(this, this, fileName, list_type.getType().toUpperCase(), mUser);
         String[] recipients = mCustomRepo.getMailTo().split(";");
         SendEmailAsyncTask email = new SendEmailAsyncTask();
         email.m = new Mail(mCustomRepo.getMailAddress(), mCustomRepo.getMailPassword());
         email.m.set_from(mCustomRepo.getMailAddress());
         email.m.setBody(stringBuilder.toString());
         email.m.set_to(recipients);
+        try {
+            File cacheDir = getCacheDir();
+            String tempPDFFile = cacheDir.getPath() + "/" + fileName + ".pdf";
+            email.m.addAttachment(tempPDFFile, fileName + ".pdf");
+
+            String tempCSVFile = cacheDir.getPath() + "/" + fileName + ".csv";
+            email.m.addAttachment(tempCSVFile, fileName + ".csv");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         email.m.set_host(mCustomRepo.getMailHost());
         email.m.set_port(String.valueOf(mCustomRepo.getMailSMTPPort()));
         email.m.set_sport(String.valueOf(mCustomRepo.getMailSMTPPort()));
@@ -330,6 +360,14 @@ public class ScannedProductActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            File cacheDir = getCacheDir();
+            String tempPDFFile = cacheDir.getPath() + "/" + fileName + ".pdf";
+            File filePDF = new File(tempPDFFile);
+            filePDF.delete();
+            String tempCSVFile = cacheDir.getPath() + "/" + fileName + ".csv";
+            File fileCSV = new File(tempCSVFile);
+            fileCSV.delete();
+
             if (isSent) {
                 mLogRepo.saveEventLog(
                         new EventLog(1, DateTimeCounter.getDateTime(), mUserId, "sent: \n" + stringBuilder.toString(), "SEND MAIL")
@@ -337,7 +375,6 @@ public class ScannedProductActivity extends AppCompatActivity {
                 mScannedProductRepo.delete(mScannedProductRepo
                         .getAllScannedProductByType(list_type.getType().toUpperCase()));
                 refreshData();
-
             } else {
                 mLogRepo.saveEventLog(
                         new EventLog(1, DateTimeCounter.getDateTime(), mUserId, "Failed to send list by mail", "SEND MAIL")
@@ -419,5 +456,17 @@ public class ScannedProductActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.info_menu_logged, menu);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Session.checkIfSessionIsActive(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Session.checkIfSessionIsActive(this);
     }
 }

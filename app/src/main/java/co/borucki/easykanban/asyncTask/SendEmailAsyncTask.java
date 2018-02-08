@@ -6,7 +6,7 @@ import javax.mail.MessagingException;
 
 import co.borucki.easykanban.Mail;
 public class SendEmailAsyncTask extends AsyncTask<Void, Void, Boolean> {
-    Mail m;
+   public Mail m;
     public SendEmailAsyncTask() {
     }
 
