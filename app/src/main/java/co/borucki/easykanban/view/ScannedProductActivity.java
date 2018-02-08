@@ -63,6 +63,7 @@ import co.borucki.easykanban.repository.ScannedProductRepository;
 import co.borucki.easykanban.repository.ScannedProductRepositoryImpl;
 import co.borucki.easykanban.repository.UserRepository;
 import co.borucki.easykanban.repository.UserRepositoryImpl;
+import co.borucki.easykanban.statics.Csv;
 import co.borucki.easykanban.statics.CustomLayoutViewSetup;
 import co.borucki.easykanban.statics.DateTimeCounter;
 import co.borucki.easykanban.statics.ImageBitmap;
@@ -315,6 +316,7 @@ public class ScannedProductActivity extends AppCompatActivity {
                 + list_type.getType().toUpperCase();
 
         Pdf.createPdf(this, this, fileName, list_type.getType().toUpperCase(), mUser);
+        Csv.createFile(this, this, fileName, list_type.getType().toUpperCase(), mUser);
         String[] recipients = mCustomRepo.getMailTo().split(";");
         SendEmailAsyncTask email = new SendEmailAsyncTask();
         email.m = new Mail(mCustomRepo.getMailAddress(), mCustomRepo.getMailPassword());
@@ -323,8 +325,12 @@ public class ScannedProductActivity extends AppCompatActivity {
         email.m.set_to(recipients);
         try {
             File cacheDir = getCacheDir();
-            String tempPDFfile = cacheDir.getPath() + "/" + fileName + ".pdf";
-            email.m.addAttachment(tempPDFfile, fileName + ".pdf");
+            String tempPDFFile = cacheDir.getPath() + "/" + fileName + ".pdf";
+            email.m.addAttachment(tempPDFFile, fileName + ".pdf");
+
+            String tempCSVFile = cacheDir.getPath() + "/" + fileName + ".csv";
+            email.m.addAttachment(tempCSVFile, fileName + ".csv");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -355,9 +361,12 @@ public class ScannedProductActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             File cacheDir = getCacheDir();
-            String tempPDFfile = cacheDir.getPath() + "/" + fileName + ".pdf";
-            File file = new File(tempPDFfile);
-            file.delete();
+            String tempPDFFile = cacheDir.getPath() + "/" + fileName + ".pdf";
+            File filePDF = new File(tempPDFFile);
+            filePDF.delete();
+            String tempCSVFile = cacheDir.getPath() + "/" + fileName + ".csv";
+            File fileCSV = new File(tempCSVFile);
+            fileCSV.delete();
 
             if (isSent) {
                 mLogRepo.saveEventLog(

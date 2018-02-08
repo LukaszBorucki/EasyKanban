@@ -88,4 +88,9 @@
     <string name="pdf_received_product">%s - Lista dostarczonych produktów</string>
     <string name="pdf_stocktaking">%s - Lista inwentaryzacyjna</string>
     <string name="pdf_footer">Aplikacja EasyKanban  - © Łukasz Borucki | Licencja komercyjna dla: %s</string>
+    <string name="csv_product_code">Symbol</string>
+    <string name="csv_product_unit">J.M.</string>
+    <string name="csv_product_description">Opis</string>
+    <string name="csv_scan_timestamp">Zeskanowano o:</string>
+    <string name="csv_product_quantity">Ilość</string>
 </resources>
