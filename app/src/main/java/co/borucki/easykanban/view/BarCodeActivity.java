@@ -74,12 +74,11 @@ public class BarCodeActivity extends Activity {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-
+cameraSource.stop();
             }
         });
 
@@ -111,5 +110,23 @@ public class BarCodeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Session.checkIfSessionIsActive(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cameraSource.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraSource.stop();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        cameraSource.stop();
     }
 }

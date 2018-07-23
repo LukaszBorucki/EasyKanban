@@ -34,13 +34,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.google.android.gms:play-services:11.8.0'
-    compile group: 'com.opencsv', name: 'opencsv', version: '3.3'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '3.3'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    debugCompile 'im.dino:dbinspector:3.4.1@aar'
+//    debugCompile 'im.dino:dbinspector:3.4.1@aar'
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
             def requested = details.requested

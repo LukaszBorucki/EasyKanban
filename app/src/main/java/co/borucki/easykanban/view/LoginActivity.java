@@ -1,6 +1,5 @@
 package co.borucki.easykanban.view;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,17 +8,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import co.borucki.easykanban.R;
 import co.borucki.easykanban.asyncTask.UserAsyncTask;
 import co.borucki.easykanban.model.User;
@@ -48,41 +45,40 @@ public class LoginActivity extends AppCompatActivity {
     private User user;
     private List<String> spinnerArray = new ArrayList<>();
     private ArrayAdapter<String> adapter;
+    private StringBuilder passwordBuilder = new StringBuilder();
+    private List<Button> buttons = new ArrayList<>();
+
     @BindView(R.id.login_activity_spinner)
     Spinner mSpinner;
-    @BindView(R.id.login_first_digit)
-    EditText mFirstDigit;
-    @BindView(R.id.login_second_digit)
-    EditText mSecondDigit;
-    @BindView(R.id.login_third_digit)
-    EditText mThirdDigit;
-    @BindView(R.id.login_fourth_digit)
-    EditText mFourthDigit;
     @BindView(R.id.login_tool_bar)
     Toolbar navigationToolBar;
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        hideKeyboard();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        hideKeyboard();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        hideKeyboard();
-    }
+    @BindView(R.id.login_button_digit_0)
+    Button buttonDigit0;
+    @BindView(R.id.login_button_digit_1)
+    Button buttonDigit1;
+    @BindView(R.id.login_button_digit_2)
+    Button buttonDigit2;
+    @BindView(R.id.login_button_digit_3)
+    Button buttonDigit3;
+    @BindView(R.id.login_button_digit_4)
+    Button buttonDigit4;
+    @BindView(R.id.login_button_digit_5)
+    Button buttonDigit5;
+    @BindView(R.id.login_button_digit_6)
+    Button buttonDigit6;
+    @BindView(R.id.login_button_digit_7)
+    Button buttonDigit7;
+    @BindView(R.id.login_button_digit_8)
+    Button buttonDigit8;
+    @BindView(R.id.login_button_digit_9)
+    Button buttonDigit9;
+    @BindView(R.id.login_button_digit_clear)
+    Button buttonDigitClear;
 
     @Override
     protected void onResume() {
         super.onResume();
-        hideKeyboard();
+        passwordBuilder.delete(0, passwordBuilder.length());
     }
 
     @Override
@@ -96,10 +92,19 @@ public class LoginActivity extends AppCompatActivity {
 
         if (mUsers.size() == 0) {
             disableEditTexts();
-            hideKeyboard();
-            showErrorDialog(getString(R.string.login_activity_no_users_loaded), false, false);
+            showErrorDialog(getString(R.string.login_activity_no_users_loaded), false);
         }
-
+        buttons.add(buttonDigit0);
+        buttons.add(buttonDigit1);
+        buttons.add(buttonDigit2);
+        buttons.add(buttonDigit3);
+        buttons.add(buttonDigit4);
+        buttons.add(buttonDigit5);
+        buttons.add(buttonDigit6);
+        buttons.add(buttonDigit7);
+        buttons.add(buttonDigit8);
+        buttons.add(buttonDigit9);
+        buttons.add(buttonDigitClear);
         setSpinnerArray();
         adapter = new ArrayAdapter<String>(
                 this, R.layout.login_spinner_style, spinnerArray) {
@@ -122,109 +127,41 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         mSpinner.setAdapter(adapter);
-            mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    user = mUsers.get(mSpinner.getSelectedItemPosition());
-                    if (user.getPossibleLoginTry() <= 0) {
-                        hideKeyboard();
-                        disableEditTexts();
-                        if (user.isBlocked()) {
-                            showErrorDialog(getString(R.string.login_activity_error_user_is_blocked, user.getName(), user.getSurname()), true, false);
-                        } else {
-                            long periodInSeconds;
-                            if (user.getLastLogin() != null) {
-                                periodInSeconds = DateTimeCounter.getPeriodInSeconds(user.getLastLogin());
-                            } else {
-                                periodInSeconds = 900;
-                            }
-                            if (periodInSeconds < 900) {
-                                showErrorDialog(
-                                        getString(
-                                                R.string.login_activity_error_acount_temporarily_blocked
-                                                , (901 - periodInSeconds) / 60
-                                                , 901 - periodInSeconds - (((901 - periodInSeconds) / 60) * 60))
-                                        , false, false);
-                            } else {
-                                user.setPossibleLoginTry(10);
-                                mUserRep.updateUser(user);
-                                enableEditTexts();
-                                showSoftKeyboard();
-                            }
-                        }
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                user = mUsers.get(mSpinner.getSelectedItemPosition());
+                if (user.getPossibleLoginTry() <= 0) {
+                    disableEditTexts();
+                    if (user.isBlocked()) {
+                        showErrorDialog(getString(R.string.login_activity_error_user_is_blocked, user.getName(), user.getSurname()), true);
                     } else {
-                        showSoftKeyboard();
-                        enableEditTexts();
+                        long periodInSeconds;
+                        if (user.getLastLogin() != null) {
+                            periodInSeconds = DateTimeCounter.getPeriodInSeconds(user.getLastLogin());
+                        } else {
+                            periodInSeconds = 900;
+                        }
+                        if (periodInSeconds < 900) {
+                            showErrorDialog(
+                                    getString(
+                                            R.string.login_activity_error_acount_temporarily_blocked
+                                            , (901 - periodInSeconds) / 60
+                                            , 901 - periodInSeconds - (((901 - periodInSeconds) / 60) * 60))
+                                    , false);
+                        } else {
+                            user.setPossibleLoginTry(10);
+                            mUserRep.updateUser(user);
+                            enableEditTexts();
+                        }
                     }
+                } else {
+                    enableEditTexts();
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
-
-        mFirstDigit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mSecondDigit.requestFocus();
-            }
-        });
-        mSecondDigit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mThirdDigit.requestFocus();
-            }
-        });
-        mThirdDigit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mFourthDigit.requestFocus();
-            }
-        });
-        mFourthDigit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (mFourthDigit.getText().length() >= 1) {
-                    hideKeyboard();
-                    if (mFirstDigit.getText().length() == 1
-                            && mSecondDigit.getText().length() == 1
-                            && mThirdDigit.getText().length() == 1
-                            && mFourthDigit.getText().length() == 1) {
-                        checkLoginData();
-                    }
-                }
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
@@ -236,34 +173,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void disableEditTexts() {
-        mFirstDigit.setEnabled(false);
-        mSecondDigit.setEnabled(false);
-        mThirdDigit.setEnabled(false);
-        mFourthDigit.setEnabled(false);
+        for (Button button : buttons) {
+            button.setEnabled(false);
+        }
     }
 
     private void enableEditTexts() {
-        mFirstDigit.setEnabled(true);
-        mSecondDigit.setEnabled(true);
-        mThirdDigit.setEnabled(true);
-        mFourthDigit.setEnabled(true);
-    }
-
-    void hideKeyboard() {
-        View currentFocus = getCurrentFocus();
-        if (currentFocus != null) {
-            currentFocus.clearFocus();
-            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        for (Button button : buttons) {
+            button.setEnabled(true);
         }
     }
 
     void checkLoginData() {
-        int password = Integer.valueOf(mFirstDigit.getText().toString()) * 1000;
-        password += Integer.valueOf(mSecondDigit.getText().toString()) * 100;
-        password += Integer.valueOf(mThirdDigit.getText().toString()) * 10;
-        password += Integer.valueOf(mFourthDigit.getText().toString());
-
+        int password = Integer.valueOf(passwordBuilder.toString());
+        passwordBuilder.delete(0, 4);
         if (password != Integer.valueOf(user.getPassword())) {
             if (DateTimeCounter.getPeriodInSeconds(user.getLastLogin()) > 900) {
                 user.setPossibleLoginTry(10);
@@ -276,13 +199,13 @@ public class LoginActivity extends AppCompatActivity {
                         getString(
                                 R.string.login_activity_alert_dialog_message
                                 , user.getPossibleLoginTry())
-                        , false, true);
+                        , false);
             } else {
                 disableEditTexts();
                 showErrorDialog(
                         getString(
                                 R.string.login_activity_alert_dialog_message_account_blocked)
-                        , false, false);
+                        , false);
             }
         } else {
             user.setPossibleLoginTry(10);
@@ -295,16 +218,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    void resetDigits() {
-        mFirstDigit.setText("");
-        mSecondDigit.setText("");
-        mThirdDigit.setText("");
-        mFourthDigit.setText("");
-        mFourthDigit.clearFocus();
-        mFirstDigit.requestFocus(1);
-    }
 
-    void showErrorDialog(String message, boolean cancelable, final boolean keyboard) {
+    void showErrorDialog(String message, boolean cancelable) {
         final AlertDialog.Builder builer = new AlertDialog.Builder(this);
         builer.setTitle(R.string.login_activity_alert_dialog_title);
         builer.setMessage(message);
@@ -313,8 +228,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                resetDigits();
-                if (keyboard) showSoftKeyboard();
             }
         });
         builer.setNegativeButton(R.string.login_activity_alert_dialog_negative_button_text, new DialogInterface.OnClickListener() {
@@ -331,11 +244,6 @@ public class LoginActivity extends AppCompatActivity {
         System.exit(0);
     }
 
-    void showSoftKeyboard() {
-        mFirstDigit.requestFocus();
-        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -355,5 +263,110 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.info_menu, menu);
         return true;
+    }
+
+    @OnClick(R.id.login_button_digit_0)
+    public void clickedDigit0() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(0);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_1)
+    public void clickedDigit1() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(1);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_2)
+    public void clickedDigit2() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(2);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_3)
+    public void clickedDigit3() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(3);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_4)
+    public void clickedDigit4() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(4);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_5)
+    public void clickedDigit5() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(5);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_6)
+    public void clickedDigit6() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(6);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_7)
+    public void clickedDigit7() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(7);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_8)
+    public void clickedDigit8() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(8);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_9)
+    public void clickedDigit9() {
+        if (passwordBuilder.length() < 4) {
+            passwordBuilder.append(9);
+        }
+        if (passwordBuilder.length() >= 4) {
+            checkLoginData();
+        }
+    }
+
+    @OnClick(R.id.login_button_digit_clear)
+    public void clickedDigitClear() {
+        passwordBuilder.delete(0, passwordBuilder.length());
     }
 }
