@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.List;
 
 import javax.mail.AuthenticationFailedException;
@@ -317,10 +318,12 @@ public class ScannedProductActivity extends AppCompatActivity {
 
         Pdf.createPdf(this, this, fileName, list_type.getType().toUpperCase(), mUser);
         Csv.createFile(this, this, fileName, list_type.getType().toUpperCase(), mUser);
-        String[] recipients = mCustomRepo.getMailTo().split(";");
+//        String[] recipients = mCustomRepo.getMailTo().split(";");
+        String[] recipients = new String[]{ ""};
         SendEmailAsyncTask email = new SendEmailAsyncTask();
-        email.m = new Mail(mCustomRepo.getMailAddress(), mCustomRepo.getMailPassword());
-        email.m.set_from(mCustomRepo.getMailAddress());
+//        email.m = new Mail(mCustomRepo.getMailAddress(), mCustomRepo.getMailPassword());
+        email.m = new Mail("", "");
+        email.m.set_from("");
         email.m.setBody(stringBuilder.toString());
         email.m.set_to(recipients);
         try {
@@ -335,8 +338,8 @@ public class ScannedProductActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         email.m.set_host(mCustomRepo.getMailHost());
-        email.m.set_port(String.valueOf(mCustomRepo.getMailSMTPPort()));
-        email.m.set_sport(String.valueOf(mCustomRepo.getMailSMTPPort()));
+        email.m.set_port(String.valueOf(465));
+        email.m.set_sport(String.valueOf(465));
         email.m.set_subject(mCustomRepo.getCustomerName() + "-" + list_type.getType().toUpperCase());
         email.execute();
     }

@@ -54,7 +54,24 @@ public class UserAsyncTask extends AsyncTask<Void, Void, List<UserDTO>> {
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-        return Arrays.asList(restTemplate.getForObject(link, UserDTO[].class));
+//        return Arrays.asList(restTemplate.getForObject(link, UserDTO[].class));
+        return getFakeUsers();
+    }
+
+    private List<UserDTO> getFakeUsers() {
+        List<UserDTO> userDTOS = new ArrayList<>();
+        UserDTO user1 = new UserDTO();
+        user1.setId(1l);
+        user1.setName("Jan");
+        user1.setSurname("Nowak");
+        user1.setPassword("1234");
+        user1.setBlocked(0);
+        user1.setPermissions(8);
+        user1.setLastLogin("");
+        user1.setPossibleLoginTry(3);
+        user1.setForceChanges(1);
+        userDTOS.add(user1);
+        return userDTOS;
     }
 
     @Override
@@ -68,8 +85,8 @@ public class UserAsyncTask extends AsyncTask<Void, Void, List<UserDTO>> {
                 toSaveList.add(userDTO);
             }
         }
-        mUserRepo.updateUser(Mapper.fromUserDTOToUser(toUpdateList));
-        mUserRepo.saveUser(Mapper.fromUserDTOToUser(toSaveList));
+//        mUserRepo.updateUser(Mapper.fromUserDTOToUser(toUpdateList));
+        mUserRepo.saveUser(Mapper.fromUserDTOToUser(toUpdateList));
         if (adapter != null && spinnerArray != null) {
             for (User user : mUserRepo.getAllUsers()) {
                 spinnerArray.add(user.getName() + " " + user.getSurname());

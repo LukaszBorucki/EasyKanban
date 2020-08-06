@@ -8,6 +8,7 @@ import android.widget.Toast;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +43,18 @@ public class IncomingMessageAsyncTask extends AsyncTask<Void, Void, List<Incomin
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-        return Arrays.asList(restTemplate.getForObject(link, IncomingMessageDTO[].class));
+//        return Arrays.asList(restTemplate.getForObject(link, IncomingMessageDTO[].class));
+        List<IncomingMessageDTO> incomming = new ArrayList<>();
+        IncomingMessageDTO incomingMessageDTO = new IncomingMessageDTO();
+        incomingMessageDTO.setId(1);
+        incomingMessageDTO.setFrom("łukasz");
+        incomingMessageDTO.setContents("proszę zrobić inwentaryzację");
+        incomingMessageDTO.setSubject("inwent");
+
+
+        incomming.add(incomingMessageDTO);
+
+        return incomming;
     }
 
     @Override

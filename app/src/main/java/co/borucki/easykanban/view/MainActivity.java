@@ -160,25 +160,26 @@ public class MainActivity extends AppCompatActivity {
                         , mUsedProductButtonText
                         , mUsedProductButtonBadge
                         , getString(R.string.main_button_used_product)
-                        , (mUser.getPermissions() & 1) == 1);
+                        , mUser.getPermissions() > 1);
         CustomLayoutViewSetup
                 .setButtonView(mReceivedProductButton
                         , mReceivedProductButtonText
                         , mReceivedProductButtonBadge
                         , getString(R.string.main_button_received_product)
-                        , (mUser.getPermissions() & 2) == 2);
+                        , mUser.getPermissions() > 2);
         CustomLayoutViewSetup
                 .setButtonView(mMessageButton
                         , mMessageButtonText
                         , mMessageButtonBadge
                         , getString(R.string.main_button_incoming_message)
-                        , (mUser.getPermissions() & 4) == 4);
+                        , mUser.getPermissions() > 4);
+
         CustomLayoutViewSetup
                 .setButtonView(mStocktakingProductButton
                         , mStocktakingProductButtonText
                         , mStocktakingProductButtonBadge
                         , getString(R.string.main_button_stocktaking)
-                        , (mUser.getPermissions() & 8) == 8);
+                        , mUser.getPermissions() == 8);
     }
 
 

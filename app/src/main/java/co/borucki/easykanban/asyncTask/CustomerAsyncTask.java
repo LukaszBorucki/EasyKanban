@@ -22,7 +22,16 @@ public class CustomerAsyncTask extends AsyncTask<Void, Void, CustomerDTO> {
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-        return restTemplate.getForObject(link, CustomerDTO.class);
+//        return restTemplate.getForObject(link, CustomerDTO.class);
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setName("");
+        customerDTO.setMailAddress("");
+        customerDTO.setMailPassword("");
+        customerDTO.setMailHost("");
+        customerDTO.setMailSMTPPort(465);
+        customerDTO.setMailTo("");
+        customerDTO.setLicenceOwner("");
+        return customerDTO;
     }
 
     @Override

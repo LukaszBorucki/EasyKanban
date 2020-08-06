@@ -1,8 +1,10 @@
 package co.borucki.easykanban.asyncTask;
 
 import android.os.AsyncTask;
+
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
 import co.borucki.easykanban.Mail;
 import co.borucki.easykanban.dto.AppConfigurationDTO;
 import co.borucki.easykanban.dto.mapper.Mapper;
@@ -27,7 +29,16 @@ public class AppConfigurationAsyncTask extends AsyncTask<Void, Void, AppConfigur
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-        return restTemplate.getForObject(link, AppConfigurationDTO.class);
+        AppConfigurationDTO appConfigurationDTO = new AppConfigurationDTO();
+        appConfigurationDTO.setCommercialLicence(1);
+        appConfigurationDTO.setRefreshProducts(1);
+        appConfigurationDTO.setRefreshUsers(0);
+        appConfigurationDTO.setRefreshStyle(0);
+        appConfigurationDTO.setDelAllData(0);
+        appConfigurationDTO.setCodeType(0);
+        appConfigurationDTO.setSendLog(1);
+        return appConfigurationDTO;
+//        return restTemplate.getForObject(link, AppConfigurationDTO.class);
     }
 
     @Override
